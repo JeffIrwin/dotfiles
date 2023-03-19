@@ -5,11 +5,8 @@
 -- Packer package manager plugins
 require("plugins")
 
---print("hello from init.lua")
-
 --vim.cmd('colorscheme default')
 --vim.cmd('colorscheme koehler')
---vim.cmd('colorscheme rose-pine')
 
 vim.o.background = "dark" -- or "light" for light mode
 vim.cmd([[colorscheme gruvbox]])
@@ -24,7 +21,6 @@ vim.cmd("hi link fortranTab NONE")
 
 vim.cmd("set textwidth=80")
 
-    
 -- Display leading spaces as dark grey (plays well with default colorscheme and
 -- koehler).  Note that this has to be applied *after* setting the colorscheme
 --
@@ -37,16 +33,6 @@ vim.cmd("set textwidth=80")
 --vim.cmd("highlight WhiteSpaceBol ctermbg=darkgrey")
 vim.cmd("highlight WhiteSpaceBol guibg=darkgrey")
 vim.cmd('match WhiteSpaceBol /^ \\+/')
-    
---vim.cmd('inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"')
---vim.cmd('inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"')
-
---vim.keymap.set('i', '<Tab>', function()
---    return vim.fn.pumvisible() == 1 and '<C-N>' or '<Tab>'
---end, {expr = true})
-
---vim.keymap.set('i', '<Tab>', "<C-n>", {})
---vim.keymap.set('i', '<Tab>', "<C-p>", {})
 
 vim.g.mapleader = " "
 
@@ -77,49 +63,5 @@ function()
 		return '<C-p>'
 	end
 
-    --return '<C-p>'
-
 end, {expr = true})
-
--- vaa
--- vab
--- vac
-
---local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
---vim.keymap.set("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
---vim.keymap.set("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
-
---local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
---vim.keymap.set("i", "<TAB>", 'pumvisible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
---vim.keymap.set("i", "<S-TAB>", [[pumvisible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
-
---function smart_tab()
---    if vim.fn.pumvisible() ~= 0 then
---        vim.api.nvim_eval([[feedkeys("\<c-n>", "n")]])
---        return
---    end
---
---    local col = vim.fn.col(".") - 1
---    if col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
---        vim.api.nvim_eval([[feedkeys("\<tab>", "n")]])
---        return
---    end
---
---    vim.fn["compe#complete"]();
---end
-
---function smart_tab()
---    if vim.fn.pumvisible() ~= 0 then
---        vim.api.nvim_eval([[feedkeys("\<c-n>", "n")]])
---        return
---    end
---
---    local col = vim.fn.col(".") - 1
---    if col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
---        vim.api.nvim_eval([[feedkeys("\<tab>", "n")]])
---        return
---    end
---
---    vim.fn["compe#complete"]();
---end
 
