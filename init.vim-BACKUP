@@ -1,0 +1,11 @@
+
+" Jeff's nvim config
+
+":set relativenumber
+
+" Hybrid line numbers
+:set number relativenumber
+
+:colo default
+":colo koehler
+
