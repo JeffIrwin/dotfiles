@@ -28,3 +28,9 @@ Open init.lua in the repo and source it:
 
 For package management, see:  https://github.com/wbthomason/packer.nvim
 
+Sync the packages in nvim:
+
+    `:PackerSync`
+
+Also source the lua scripts.
+

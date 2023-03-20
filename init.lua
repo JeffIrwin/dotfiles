@@ -27,12 +27,30 @@ vim.cmd("set textwidth=80")
 -- Ref:
 --
 --    https://stackoverflow.com/a/40498439/4347028
-
+--
 --vim.cmd("highlight WhiteSpaceBol guibg=lightgreen")
 --vim.cmd("highlight WhiteSpaceBol ctermbg=lightgreen")
 --vim.cmd("highlight WhiteSpaceBol ctermbg=darkgrey")
 vim.cmd("highlight WhiteSpaceBol guibg=darkgrey")
 vim.cmd('match WhiteSpaceBol /^ \\+/')
+
+-- Remap split-window navigation commands, e.g. Ctrl+j instead of the standard
+-- Ctrl+w Ctrl+j
+--
+-- Ref:
+--
+--     https://thoughtbot.com/blog/vim-splits-move-faster-and-more-naturally#easier-split-navigations
+--
+vim.cmd("nnoremap <C-j> <C-w><C-j>")
+vim.cmd("nnoremap <C-k> <C-w><C-k>")
+vim.cmd("nnoremap <C-l> <C-w><C-l>")
+vim.cmd("nnoremap <C-h> <C-w><C-h>")
+
+-- Open new splits to the right and bottom
+vim.cmd("set splitright")
+vim.cmd("set splitbelow")
+
+-- -----------------------------------------------------------------------------
 
 vim.g.mapleader = " "
 
