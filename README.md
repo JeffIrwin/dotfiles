@@ -34,3 +34,7 @@ Sync the packages in nvim:
 
 Also source the lua scripts.
 
+# tmux integration
+
+For better consistency using nvim with tmux, see [.tmux.conf]().
+
