@@ -5,21 +5,25 @@
 -- Packer package manager plugins
 require("plugins")
 
+---- Builtin colorschemes, no packer required
 --vim.cmd('colorscheme default')
 --vim.cmd('colorscheme koehler')
 
+-- These colorschemes require packer plugins
 vim.o.background = "dark" -- or "light" for light mode
 vim.cmd([[colorscheme gruvbox]])
 
 -- Hybrid line numbers: show the current line as absolute and others as relative
-vim.cmd("set number relativenumber")
+vim.o.number         = true
+vim.o.relativenumber = true
 
-vim.cmd("set tabstop=4")
+vim.o.tabstop    = 4
+vim.o.shiftwidth = 4
 
 -- nvim thinks tabs are illegal in Fortran.  They're not
 vim.cmd("hi link fortranTab NONE")
 
-vim.cmd("set textwidth=80")
+vim.o.textwidth = 80
 
 -- Display leading spaces as dark grey (plays well with default colorscheme and
 -- koehler).  Note that this has to be applied *after* setting the colorscheme
