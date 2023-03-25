@@ -58,13 +58,16 @@ vim.cmd("set splitbelow")
 
 vim.g.mapleader = " "
 
--- Map " pv" in normal mode ("n") to ":Ex" (file explorer)
+-- Map " pv" in normal mode ("n") to ":Ex" (file explorer).  Apparently this
+-- shortcut is from emacs or something?
 --
 -- Ref:
 --
 --     ThePrimeagen's neovim rc youtube video
+vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)   -- explorer in current split
 
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+--vim.keymap.set("n", "<leader>ps", vim.cmd.Vex!) -- explorer in new split on right
+vim.keymap.set("n", "<leader>ps", function() vim.cmd.Vex{ bang = true } end) -- explorer in new split on right
 
 -- Jeff's dumb supertab replacement
 vim.keymap.set('i', '<Tab>',
