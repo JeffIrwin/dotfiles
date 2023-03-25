@@ -30,6 +30,11 @@ Open init.lua in the repo and source it:
 
 For package management, see:  https://github.com/wbthomason/packer.nvim
 
+Packer's instructions are copied here:
+
+    git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+        ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+
 Sync the packages in nvim:
 
     :PackerSync
