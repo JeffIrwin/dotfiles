@@ -17,11 +17,6 @@ vim.cmd([[colorscheme gruvbox]])
 vim.o.number         = true
 vim.o.relativenumber = true
 
-vim.o.tabstop    = 4
-vim.o.shiftwidth = 4
-
-vim.o.textwidth = 80
-
 -- Remap split-window navigation commands, e.g. Ctrl+j instead of the standard
 -- Ctrl+w Ctrl+j
 --

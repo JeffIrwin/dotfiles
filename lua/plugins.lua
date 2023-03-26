@@ -8,6 +8,8 @@ return require('packer').startup(function(use)
 	-- Packer can manage itself
 	use 'wbthomason/packer.nvim'
 
+	use { "rose-pine/neovim" }
+
 	--use({
 	--	'rose-pine/neovim',
 	--	as = 'rose-pine',
@@ -16,14 +18,14 @@ return require('packer').startup(function(use)
 	--	end
 	--})
 
-	--use { "ellisonleao/gruvbox.nvim" }
-	use({
-		"ellisonleao/gruvbox.nvim",
-		config = function()
-			vim.o.background = "dark"
-			vim.cmd([[colorscheme gruvbox]])
-		end
-	})
+	use { "ellisonleao/gruvbox.nvim" }
+	--use({
+	--	"ellisonleao/gruvbox.nvim",
+	--	config = function()
+	--		vim.o.background = "dark"
+	--		vim.cmd([[colorscheme gruvbox]])
+	--	end
+	--})
 
 	use('christoomey/vim-tmux-navigator')
 

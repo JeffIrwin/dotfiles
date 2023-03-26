@@ -4,6 +4,11 @@
 
 --print("hello from after")
 
+vim.o.tabstop    = 4
+vim.o.shiftwidth = 4
+
+vim.o.textwidth = 80
+
 -- nvim thinks tabs are illegal in Fortran.  They're not
 vim.cmd("hi link fortranTab NONE")
 
