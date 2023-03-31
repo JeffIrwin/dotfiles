@@ -12,6 +12,7 @@ require("plugins")
 -- These colorschemes require packer plugins
 vim.o.background = "dark" -- or "light" for light mode
 vim.cmd([[colorscheme gruvbox]])
+--vim.cmd([[colorscheme rose-pine]])
 
 -- Hybrid line numbers: show the current line as absolute and others as relative
 vim.o.number         = true
