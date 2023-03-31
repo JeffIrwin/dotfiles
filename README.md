@@ -5,6 +5,12 @@ My dotfiles for configuring neovim
 
 ## Download and Setup
 
+### Easy way: `install.sh`
+
+Clone this anywhere then run `install.sh`
+
+### Hard way
+
 Clone the repository in ~/.config/ and with the directory name `nvim`:
 
     # mkdir ~/.config
@@ -26,7 +32,7 @@ Open init.lua in the repo and source it:
     nvim init.lua
 	:so
 
-# Package management
+#### Package management
 
 For package management, see:  https://github.com/wbthomason/packer.nvim
 
@@ -40,7 +46,6 @@ Sync the packages in nvim:
 
 Also source the lua scripts.
 
-# tmux integration
+#### tmux integration
 
 For better consistency using nvim with tmux, see [.tmux.conf](.tmux.conf).
-
