@@ -1,0 +1,23 @@
+
+#===============================================================================
+# session initialisation
+#
+# run "tmux a" to attach to a new session with this as the default
+
+# first pane in git dir
+new-session -s session -n bash -c '/mnt/c/git' 'bash'
+
+# second pane in whichever dir tmux is launched in
+split-window -h -p 50 -c '.' 'bash'
+
+# third pane in home dir
+split-window -v -p 50 -c '~' 'bash'
+
+# other panes default to the session's dir (git)
+new-window 'nvim'
+#new-window 'bash'
+
+select-window -t 0
+select-pane   -t 0
+
+#===============================================================================
