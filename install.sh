@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # Hopefully one of these works
-sudo apt install nvim -y 2> /dev/null
 sudo dnf install nvim -y 2> /dev/null
+#sudo apt install nvim -y 2> /dev/null
+sudo snap install nvim -y 2>/dev/null
 brew install nvim     -y 2> /dev/null
 
 cp .tmux.conf ~
