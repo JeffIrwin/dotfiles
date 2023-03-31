@@ -21,3 +21,7 @@ select-window -t 0
 select-pane   -t 0
 
 #===============================================================================
+
+# theme override
+set -g status-bg "#dd66aa"
+
