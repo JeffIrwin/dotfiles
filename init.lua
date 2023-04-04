@@ -36,18 +36,27 @@ vim.cmd("set splitbelow")
 
 -- -----------------------------------------------------------------------------
 
+-- The leader key is like your personal namespace for vim commands.  Any command
+-- defined with the leader as a prefix is guaranteed not to clash with any
+-- builtin keybinding.
 vim.g.mapleader = " "
 
--- Map " pv" in normal mode ("n") to ":Ex" (file explorer).  Apparently this
--- shortcut is from emacs or something?
---
--- Ref:
---
---     ThePrimeagen's neovim rc youtube video
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)   -- explorer in current split
+vim.keymap.set("n", "<leader>n", ":bnext<CR>")
+vim.keymap.set("n", "<leader>p", ":bprev<CR>")
 
---vim.keymap.set("n", "<leader>ps", vim.cmd.Vex!) -- explorer in new split on right
-vim.keymap.set("n", "<leader>ps", function() vim.cmd.Vex{ bang = true } end) -- explorer in new split on right
+---- Map " pv" in normal mode ("n") to ":Ex" (file explorer).  Apparently this
+---- shortcut is from emacs or something?
+----
+---- Ref:
+----
+----     ThePrimeagen's neovim rc youtube video
+--vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)   -- explorer in current split
+
+---- actually they're allowed to conflict like " ps" would conflict with " p"
+---- here, but it causes a delay before " p" is executed
+
+--vim.keymap.set("n", "<leader>ps", function() vim.cmd.Vex{ bang = true } end) -- explorer in new split on right
+vim.keymap.set("n", "<leader>v", function() vim.cmd.Vex{ bang = true } end) -- explorer in new vertical split on right
 
 -- Jeff's dumb supertab replacement
 vim.keymap.set('i', '<Tab>',
@@ -69,4 +78,23 @@ function()
 	end
 
 end, {expr = true})
+
+-- changemewtf's fuzzy finder.  Usage: ```<leader>f *pattern*<Tab>``` or 
+-- ```:find *pattern*<Enter>```.  For example, I have a file under this
+-- directory with this path and name:
+--
+--     ./after/ftplugin/fortran.lua
+--
+-- To edit it, simply type (in normal mode) " f for<Tab><Enter>".  That's
+-- assuming there's no other match before it in the tab completion menu.
+--vim.o.path:append({"**"})
+vim.opt.path:append { "**" }
+--vim.o.path = vim.o.path .. "**" -- str cat is ".." in lua 😩
+--vim.cmd("set path+=**")
+vim.keymap.set("n", "<leader>f", ":find ")
+
+--vim.o.wildignore:append {'*/scratch/*,*/target/*,*/build/*'} -- ignore these dirs for find
+--vim.o.wildignore = vim.o.wildignore .. "*/scratch/*,*/target/*,*/build/*" -- ignore these dirs for find
+--vim.opt.wildignore:append { "*.pyc", "node_modules" }
+vim.opt.wildignore:append { "*/scratch/*", "*/target/*" } -- you *must* use ".opt" here, not just ".o"
 
