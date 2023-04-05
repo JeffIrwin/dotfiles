@@ -47,6 +47,8 @@ vim.cmd("set splitbelow")
 -- builtin keybinding.
 vim.g.mapleader = " "
 
+vim.keymap.set("n", "<leader>a", "<C-^>") -- alternate to the _previously edited_ buffer (not the same as :bprev)
+vim.keymap.set("n", "<leader>l", ":ls<CR>")
 vim.keymap.set("n", "<leader>n", ":bnext<CR>")
 vim.keymap.set("n", "<leader>p", ":bprev<CR>")
 
