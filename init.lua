@@ -53,7 +53,9 @@ vim.opt.splitbelow = true
 -- builtin keybinding.
 vim.g.mapleader = " "
 
+-- TODO: consider changing to <leader>Space for consistency w/ tmux binding
 vim.keymap.set("n", "<leader>a", "<C-^>"     , {noremap = true}) -- alternate to the prev opened buf
+
 vim.keymap.set("n", "<leader>f", ":find "    , {noremap = true})
 vim.keymap.set("n", "<leader>l", ":ls<CR>"   , {noremap = true})
 vim.keymap.set("n", "<leader>n", ":bnext<CR>", {noremap = true})
