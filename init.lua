@@ -36,7 +36,9 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", {noremap = true})
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>", {noremap = true})
 vim.keymap.set("n", "<C-h>", "<C-w><C-h>", {noremap = true})
 
--- netrw (explorer) overrides normal keymaps
+-- netrw (explorer) overrides normal keymaps.  this breaks the tmux integration
+-- and i'm not sure if i can do anything about that (although it works if you
+-- edit a normal file from netrw)
 vim.cmd("autocmd FileType netrw nmap <buffer> <C-j> <C-w><C-j>")
 vim.cmd("autocmd FileType netrw nmap <buffer> <C-k> <C-w><C-k>")
 vim.cmd("autocmd FileType netrw nmap <buffer> <C-l> <C-w><C-l>")
@@ -53,11 +55,11 @@ vim.opt.splitbelow = true
 -- builtin keybinding.
 vim.g.mapleader = " "
 
--- TODO: consider changing to <leader>Space for consistency w/ tmux binding
-vim.keymap.set("n", "<leader>a", "<C-^>"     , {noremap = true}) -- alternate to the prev opened buf
+--vim.keymap.set("n", "<leader>a", "<C-^>"     , {noremap = true}) -- alternate to the prev opened buf
+vim.keymap.set("n", "<leader> ", "<C-^>"     , {noremap = true}) -- alternate to the prev opened buf
 
 vim.keymap.set("n", "<leader>f", ":find "    , {noremap = true})
-vim.keymap.set("n", "<leader>l", ":ls<CR>"   , {noremap = true})
+vim.keymap.set("n", "<leader>l", ":ls<CR>:b ", {noremap = true})
 vim.keymap.set("n", "<leader>n", ":bnext<CR>", {noremap = true})
 vim.keymap.set("n", "<leader>p", ":bprev<CR>", {noremap = true})
 vim.keymap.set("n", "<leader>s", ":Sex<CR>"  , {noremap = true})
