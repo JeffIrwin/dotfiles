@@ -48,6 +48,8 @@ vim.cmd("autocmd FileType netrw nmap <buffer> <C-h> <C-w><C-h>")
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+vim.api.nvim_set_option("clipboard", "unnamed")
+
 --------------------------------------------------------------------------------
 
 -- The leader key is like your personal namespace for vim commands.  Any command
