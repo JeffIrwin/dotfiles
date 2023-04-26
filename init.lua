@@ -7,18 +7,25 @@
 -- Packer package manager plugins
 require("plugins")
 
+--********
+
 ---- Builtin colorschemes, no packer required
---vim.cmd("colorscheme default")
---vim.cmd("colorscheme koehler")
+--vim.cmd.colorscheme("default")
+--vim.cmd.colorscheme("koehler")
 
 -- These colorschemes require packer plugins
-vim.opt.background = "dark" -- or "light" for light mode
-vim.cmd([[colorscheme gruvbox]])
 
----- TODO: add an optional locally-included init.lua, like I do with
----- .tmux.conf.local.  I like rose-pine in iterm, but it's contrast isn't good
----- in inferior terminals
---vim.cmd([[colorscheme rose-pine]])
+----vim.opt.background = "dark" -- or "light" for light mode
+----vim.cmd.colorscheme("gruvbox")
+
+--vim.cmd.colorscheme("tokyonight-night")
+----vim.cmd.colorscheme("tokyonight-storm")
+vim.cmd.colorscheme("tokyonight-moon")
+
+----vim.cmd.colorscheme("iceberg")
+--vim.cmd.colorscheme("rose-pine")
+
+--********
 
 -- Hybrid line numbers: show the current line as absolute and others as relative
 vim.opt.number         = true
@@ -39,16 +46,46 @@ vim.keymap.set("n", "<C-h>", "<C-w><C-h>", {noremap = true})
 -- netrw (explorer) overrides normal keymaps.  this breaks the tmux integration
 -- and i'm not sure if i can do anything about that (although it works if you
 -- edit a normal file from netrw)
-vim.cmd("autocmd FileType netrw nmap <buffer> <C-j> <C-w><C-j>")
-vim.cmd("autocmd FileType netrw nmap <buffer> <C-k> <C-w><C-k>")
-vim.cmd("autocmd FileType netrw nmap <buffer> <C-l> <C-w><C-l>")
-vim.cmd("autocmd FileType netrw nmap <buffer> <C-h> <C-w><C-h>")
+vim.cmd.autocmd("FileType netrw nmap <buffer> <C-j> <C-w><C-j>")
+vim.cmd.autocmd("FileType netrw nmap <buffer> <C-k> <C-w><C-k>")
+vim.cmd.autocmd("FileType netrw nmap <buffer> <C-l> <C-w><C-l>")
+vim.cmd.autocmd("FileType netrw nmap <buffer> <C-h> <C-w><C-h>")
 
 -- Open new splits to the right and bottom
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
-vim.api.nvim_set_option("clipboard", "unnamed")
+---- Shelling out to clip/powershell is slow af but it seems to be the only
+---- thing that works?
+--vim.api.nvim_set_option("clipboard", "unnamed")
+--vim.g.clipboard = {
+--	name = 'WslClipboard',
+--	copy = {
+--		["+"] = 'clip.exe',
+--		["*"] = 'clip.exe',
+--	 },
+--	paste = {
+--		["+"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+--		["*"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+--	},
+--	cache_enabled = 0,
+--}
+
+--********
+
+--vim.api.nvim_set_option("clipboard", "unnamed")
+--vim.g.clipboard = {
+--    name = 'WslClipboard',
+--    copy = {
+--        ["+"] = {'tmux', 'load-buffer', '-'},
+--        ["*"] = {'tmux', 'load-buffer', '-'},
+--    },
+--    paste = {
+--        ["+"] = {'tmux', 'save-buffer', '-'},
+--        ["*"] = {'tmux', 'save-buffer', '-'},
+--    },
+--    cache_enabled = true,
+--}
 
 --------------------------------------------------------------------------------
 
