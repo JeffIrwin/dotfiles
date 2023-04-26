@@ -101,6 +101,8 @@ end, {expr = true, noremap = true})
 -- To edit it, simply type (in normal mode) " f for<Tab><Enter>".  That's
 -- assuming there's no other match before it in the tab completion menu.
 vim.opt.path:append { "**" } -- you *must* use ".opt" here, not just ".o"
+
+-- TODO: try making a project-specific include which appends things like 3p
 vim.opt.wildignore:append { "*/scratch/*", "*/target/*", "*/build/*" }
 
 --------------------------------------------------------------------------------
