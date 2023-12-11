@@ -51,3 +51,6 @@ vim.cmd("highlight WhiteSpaceBol guibg=darkgrey")
 	vim.cmd.autocmd("VimEnter,WinEnter * match WhiteSpaceBol /^ \\+/")
 --})
 
+-- Enable transparent backgrounds (as long as the terminal does too) on Ubuntu
+vim.cmd("hi! Normal ctermbg=NONE guibg=NONE")
+

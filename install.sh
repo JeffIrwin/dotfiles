@@ -1,10 +1,22 @@
 #!/bin/bash
 
+set -x
+
 # Hopefully one of these works
+#
+# I've had better luck with the AppImage ("universal" Linux package)
 sudo dnf install nvim -y 2> /dev/null
 #sudo apt install nvim -y 2> /dev/null
 sudo snap install nvim --classic 2>/dev/null
-brew install nvim     -y 2> /dev/null
+
+### brew installs nvim 0.7.  Better to use the curl/tar method below to get
+### up-to-date version
+##brew install nvim        2> /dev/null
+
+## TODO: add "if darwin" logic
+#curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
+#tar xzf nvim-macos.tar.gz
+#cp ./nvim-macos/bin/nvim /usr/local/bin/
 
 cp .tmux.conf ~
 

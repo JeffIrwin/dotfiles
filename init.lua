@@ -101,6 +101,7 @@ vim.keymap.set("n", "<leader>f", ":find "    , {noremap = true})
 vim.keymap.set("n", "<leader>l", ":ls<CR>:b ", {noremap = true})
 vim.keymap.set("n", "<leader>n", ":bnext<CR>", {noremap = true})
 vim.keymap.set("n", "<leader>p", ":bprev<CR>", {noremap = true})
+vim.keymap.set("n", "<leader>e", ":Ex<CR>"   , {noremap = true})
 vim.keymap.set("n", "<leader>s", ":Sex<CR>"  , {noremap = true})
 vim.keymap.set("n", "<leader>v", ":Vex!<CR>" , {noremap = true})
 
