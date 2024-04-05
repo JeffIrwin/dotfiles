@@ -1,0 +1,26 @@
+
+# This is a test
+
+shell = "wsl"
+#shell = "ubuntu" # same thing
+
+[keyboard]
+	bindings = [
+		{ key = "Space", mods = "Control", chars = "\u0000" },
+	]
+
+[selection]
+	save_to_clipboard = true
+
+[window]
+	startup_mode = "Maximized"
+	#startup_mode = "Fullscreen"
+
+	decorations = "None"
+	#decorations = "Full"
+
+	#opacity = 0.8
+
+[font]
+	size = 13
+

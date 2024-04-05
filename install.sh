@@ -23,6 +23,11 @@ cp .tmux.conf ~
 ## TODO: modify this file and copy it if you don't already have one
 #cp .tmux.conf.local.example ~/.tmux.conf.local
 
+#USERNAME=$(cmd.exe /c "echo %USERNAME%")  # includes a carriage return :(
+#APPDATA="/mnt/c/Users/$USERNAME/AppData/Roaming/"
+APPDATA="/mnt/c/Users/$USER/AppData/Roaming/"
+cp alacritty.toml "$APPDATA/alacritty/"
+
 # This works with the repo cloned anywhere.  If you're going to modify and push
 # changes, it's better to actually clone directly to the destination
 #

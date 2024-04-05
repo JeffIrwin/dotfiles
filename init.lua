@@ -55,10 +55,15 @@ vim.cmd.autocmd("FileType netrw nmap <buffer> <C-h> <C-w><C-h>")
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
----- Shelling out to clip/powershell is slow af but it seems to be the only
----- thing that works?
---vim.api.nvim_set_option("clipboard", "unnamed")
---vim.g.clipboard = {
+-- Use standard vim yank `y` and put `p` to copy/paste into/out-of vim
+vim.api.nvim_set_option("clipboard", "unnamed")
+
+---- not sure why i resorted to the stuff below, but the "clipboard" "unnamed"
+---- setting above, in conjunction with "save_to_clipboard" in alacritty.toml,
+---- has copy and paste working in all contexts
+
+--vim.g.clipboard =
+--{
 --	name = 'WslClipboard',
 --	copy = {
 --		["+"] = 'clip.exe',
@@ -69,22 +74,6 @@ vim.opt.splitbelow = true
 --		["*"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
 --	},
 --	cache_enabled = 0,
---}
-
---********
-
---vim.api.nvim_set_option("clipboard", "unnamed")
---vim.g.clipboard = {
---    name = 'WslClipboard',
---    copy = {
---        ["+"] = {'tmux', 'load-buffer', '-'},
---        ["*"] = {'tmux', 'load-buffer', '-'},
---    },
---    paste = {
---        ["+"] = {'tmux', 'save-buffer', '-'},
---        ["*"] = {'tmux', 'save-buffer', '-'},
---    },
---    cache_enabled = true,
 --}
 
 --------------------------------------------------------------------------------
