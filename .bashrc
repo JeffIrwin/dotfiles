@@ -122,26 +122,29 @@ PATH=$PATH:~/.local/bin
 PATH=$PATH:/home/linuxbrew/.linuxbrew/bin/
 PATH=$PATH:/snap/bin/
 
-pv()
-{
-	pv_exe="/mnt/c/Program Files/ParaView 5.8.1-Windows-Python3.7-msvc2015-64bit/bin/paraview.exe"
-	#"$pv_exe" $* &
-	"$pv_exe" "$1" &
-}
-#alias pv="/mnt/c/Program\ Files/ParaView\ 5.8.1-Windows-Python3.7-msvc2015-64bit/bin/paraview.exe"
-
 alias sy=syntran
 
 alias vi=nvim
 alias vim=nvim
 
-alias ..='cd ..'
-alias ...='cd ../..'
+alias ..='  cd ..'
+alias ...=' cd ../..'
 alias ....='cd ../../..'
 
 o()
 {
-	# Open a file with the default Windows app for that file type
+	# Open a file $1 with the default Windows app for that file type
 	cmd.exe /s /c " start /b "$1" "
+}
+
+pv()
+{
+	# ParaView 5.8 is the last good one before it became an order of magnitude
+	# slower:
+	#
+	#     https://discourse.paraview.org/t/animation-is-slow-on-5-10-but-not-on-5-8-2/9067/31?u=jeff.irwin
+	#
+	pv_exe="/mnt/c/Program Files/ParaView 5.8.1-Windows-Python3.7-msvc2015-64bit/bin/paraview.exe"
+	"$pv_exe" "$1" &
 }
 
