@@ -3,6 +3,8 @@
 
 My dotfiles for configuring neovim, bash, tmux, alacritty, and more to come!
 
+This repo used to be named `neovim-dotfiles` but I renamed it after deprecated my old `dotfiles` repo (now named `dotfiles-old`).
+
 ## Download and Setup
 
 ### Easy way: `install.sh` ⚠️ this will overwrite your dotfiles!
