@@ -32,8 +32,8 @@ cp alacritty.toml !$
 # This works with the repo cloned anywhere.  If you're going to modify and push
 # changes, it's better to actually clone directly to the destination
 #
-# We don't really need the tmux files here but 🤷
-mkdir -p ~/.config/nvim/
+# We don't really need the tmux files et al here but 🤷
+mkdir -p  ~/.config/nvim/
 cp -r ./* ~/.config/nvim/
 
 # Setup packer as the nvim package manager

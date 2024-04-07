@@ -1,0 +1,7 @@
+
+# enable case insensitive tab completion
+set completion-ignore-case on
+
+# use rotating tab completion instead of prompting completion
+"\C-i" menu-complete
+
