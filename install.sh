@@ -43,6 +43,6 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvi
 nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 #nvim -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 
-cp .bashrc  ~/.bashrc
-cp .inputrc ~/.inputrc
+cp .bashrc  ~
+cp .inputrc ~
 
