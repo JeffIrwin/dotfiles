@@ -1,11 +1,11 @@
 
-# neovim-dotfiles
+# dotfiles
 
-My dotfiles for configuring neovim
+My dotfiles for configuring neovim, bash, tmux, alacritty, and more to come!
 
 ## Download and Setup
 
-### Easy way: `install.sh`
+### Easy way: `install.sh` ⚠️ this will overwrite your dotfiles!
 
 Clone this anywhere then run `install.sh`
 
