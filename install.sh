@@ -6,7 +6,7 @@ set -x
 #
 # I've had better luck with the AppImage ("universal" Linux package)
 sudo dnf install nvim -y 2> /dev/null
-#sudo apt install nvim -y 2> /dev/null
+sudo apt install nvim -y 2> /dev/null
 sudo snap install nvim --classic 2>/dev/null
 
 ### brew installs nvim 0.7.  Better to use the curl/tar method below to get
@@ -26,7 +26,8 @@ cp .tmux.conf ~
 #USERNAME=$(cmd.exe /c "echo %USERNAME%")  # includes a carriage return :(
 #APPDATA="/mnt/c/Users/$USERNAME/AppData/Roaming/"
 APPDATA="/mnt/c/Users/$USER/AppData/Roaming/"
-cp alacritty.toml "$APPDATA/alacritty/"
+mkdir -p "$APPDATA/alacritty/"
+cp alacritty.toml !$
 
 # This works with the repo cloned anywhere.  If you're going to modify and push
 # changes, it's better to actually clone directly to the destination
@@ -41,4 +42,7 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvi
 
 nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 #nvim -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+
+cp .bashrc  ~/.bashrc
+cp .inputrc ~/.inputrc
 
