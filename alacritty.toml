@@ -1,5 +1,5 @@
 
-# Start wsl and run the "tmux a" command
+# start wsl and run the "tmux a" command
 shell = "wsl tmux a"
 
 #shell = "ubuntu" # same thing as wsl
@@ -16,10 +16,20 @@ shell = "wsl tmux a"
 	startup_mode = "Maximized"
 	#startup_mode = "Fullscreen"
 
-	decorations = "None"
-	#decorations = "Full"
+	## setting decorations = "None" has several bugs:
+	##
+	## - mouse cursor doesn't show
+	## - opacity doesn't work
+	## - obs can't record alacritty
+	##
+	## fullscreen has similar bug(s)
+	##
+	#decorations = "None"
 
-	opacity = 0.8
+	decorations = "Full"
+
+	#opacity = 0.7
+	opacity = 1.0
 
 [font]
 	size = 19
@@ -27,4 +37,15 @@ shell = "wsl tmux a"
 [colors.normal]
 	blue  = "#1166cc"
 	green = "#11cc66"
+
+[colors.primary]
+
+	## tokyonight-moon nvim background
+	#background = "#262626"
+
+	# halfway
+	background = "#1f1f1f"
+
+	## alacritty default
+	#background = "#181818"
 
