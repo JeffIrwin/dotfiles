@@ -40,12 +40,10 @@ shell = "wsl tmux a"
 
 [colors.primary]
 
-	## tokyonight-moon nvim background
-	#background = "#262626"
+	#background = "#262626"  # tokyonight-moon nvim background
+	background = "#1f1f1f"   # halfway
+	#background = "#181818"  # alacritty default
 
-	# halfway
-	background = "#1f1f1f"
-
-	## alacritty default
-	#background = "#181818"
+	foreground = "#f2f2f2"   # laptop screen isn't at full brightness anyway
+	#foreground = "#d8d8d8"  # alacritty default
 
