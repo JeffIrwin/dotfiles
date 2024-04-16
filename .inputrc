@@ -5,3 +5,9 @@ set completion-ignore-case on
 # use rotating tab completion instead of prompting completion
 "\C-i" menu-complete
 
+# stop rlwrap from hiding the prompt, e.g. in syntran interpretter:
+#
+#     https://github.com/JeffIrwin/syntran?tab=readme-ov-file#rlwrap-workaround
+#
+set enable-bracketed-paste off
+
