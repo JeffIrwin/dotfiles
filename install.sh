@@ -4,10 +4,11 @@ set -x
 
 # Hopefully one of these works
 #
-# I've had better luck with the AppImage ("universal" Linux package)
-sudo dnf install nvim -y 2> /dev/null
-sudo apt install nvim -y 2> /dev/null
-sudo snap install nvim --classic 2>/dev/null
+# I've had better luck with the pre-built archives and the AppImage ("universal"
+# Linux package)
+#sudo dnf install nvim -y 2> /dev/null
+#sudo apt install nvim -y 2> /dev/null
+#sudo snap install nvim --classic 2>/dev/null
 
 ### brew installs nvim 0.7.  Better to use the curl/tar method below to get
 ### up-to-date version
