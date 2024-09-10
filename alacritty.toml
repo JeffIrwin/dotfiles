@@ -1,12 +1,27 @@
 
-# start wsl and run the "tmux a" command
-shell = "wsl tmux a"
+## start wsl and run the "tmux a" command
+#shell = "wsl tmux a"
 
+shell = "wsl"
 #shell = "ubuntu" # same thing as wsl
 
 [keyboard]
 	bindings = [
 		{ key = "Space", mods = "Control", chars = "\u0000" },
+		{ key = "NumpadEnter", chars = "\u000d" },
+	]
+
+#mouse_bindings:
+#	- { mouse: Middle, mods: Shift, action: PasteSelection }
+#	- { mouse: Right,  mods: Shift, action: Paste }
+#	- { mouse: Middle,  action: None }
+#	- { mouse: Right,  action: None }
+[mouse]
+	bindings = [
+		{ mouse = "Middle", mods = "Shift", action = "PasteSelection" },
+		{ mouse = "Right" , mods = "Shift", action = "Paste" },
+		{ mouse = "Middle", action = "None" },
+		{ mouse = "Right" , action = "None" },
 	]
 
 [selection]
@@ -43,8 +58,8 @@ shell = "wsl tmux a"
 [colors.primary]
 
 	#background = "#262626"  # tokyonight-moon nvim background
-	background = "#1f1f1f"   # halfway
-	#background = "#181818"  # alacritty default
+	#background = "#1f1f1f"   # halfway
+	background = "#181818"  # alacritty default
 
 	foreground = "#f2f2f2"   # laptop screen isn't at full brightness anyway
 	#foreground = "#d8d8d8"  # alacritty default
