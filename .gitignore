@@ -1,4 +1,6 @@
 
 # compiled packer files
-/plugin
+/plugin/
+
+/pack/
 

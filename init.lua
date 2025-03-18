@@ -7,6 +7,8 @@
 -- Packer package manager plugins
 require("plugins")
 
+--require("lsp")
+
 --********
 
 ---- Builtin colorschemes, no packer required
@@ -19,7 +21,7 @@ require("plugins")
 ----vim.cmd.colorscheme("gruvbox")
 
 --vim.cmd.colorscheme("tokyonight-night")
-----vim.cmd.colorscheme("tokyonight-storm")
+--vim.cmd.colorscheme("tokyonight-storm")
 vim.cmd.colorscheme("tokyonight-moon")
 
 ----vim.cmd.colorscheme("iceberg")
@@ -30,6 +32,8 @@ vim.cmd.colorscheme("tokyonight-moon")
 -- Hybrid line numbers: show the current line as absolute and others as relative
 vim.opt.number         = true
 vim.opt.relativenumber = true
+
+--print("hello")
 
 -- Remap split-window navigation commands, e.g. Ctrl+j instead of the standard
 -- Ctrl+w Ctrl+j
@@ -94,6 +98,27 @@ vim.keymap.set("n", "<leader>e", ":Ex<CR>"   , {noremap = true})
 vim.keymap.set("n", "<leader>s", ":Sex<CR>"  , {noremap = true})
 vim.keymap.set("n", "<leader>v", ":Vex!<CR>" , {noremap = true})
 
+-- Create the lsp keymaps only when a 
+-- language server is active
+vim.api.nvim_create_autocmd('LspAttach', {
+  desc = 'LSP actions',
+  callback = function(event)
+    local opts = {buffer = event.buf}
+
+    vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+    vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
+    vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
+    vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
+    vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
+    vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
+    vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
+    vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+    vim.keymap.set({'n', 'x'}, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
+    vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
+  end,
+})
+
+
 --------------------------------------------------------------------------------
 
 -- Jeff's dumb supertab replacement
@@ -133,4 +158,71 @@ vim.opt.path:append { "**" } -- you *must* use ".opt" here, not just ".o"
 vim.opt.wildignore:append { "*/scratch/*", "*/target/*", "*/build/*" }
 
 --------------------------------------------------------------------------------
+
+-- LSPs
+
+--********
+-- fortran
+
+--require'lspconfig'.fortls.setup{}
+--require'lspconfig'.fortls.setup{
+--	--on_attach = on_attach,
+--	cmd = {
+--		'fortls',
+--	}
+--}
+
+require'lspconfig'.fortls.setup{
+    cmd = {
+        'fortls',
+        '--lowercase_intrinsics',
+        '--hover_signature',
+        '--hover_language=fortran',
+        '--use_signature_help'
+    }
+}
+
+--********
+-- python
+require("lspconfig").pyright.setup{}
+
+--********
+-- lua
+
+require("lspconfig").lua_ls.setup {
+  on_init = function(client)
+    if client.workspace_folders then
+      local path = client.workspace_folders[1].name
+
+      if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc')) then
+        return
+      end
+    end
+
+    client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+      runtime = {
+        -- Tell the language server which version of Lua you're using
+        -- (most likely LuaJIT in the case of Neovim)
+
+        version = 'LuaJIT'
+      },
+      -- Make the server aware of Neovim runtime files
+
+      workspace = {
+        checkThirdParty = false,
+        library = {
+          vim.env.VIMRUNTIME
+          -- Depending on the usage, you might want to add additional paths here.
+          -- "${3rd}/luv/library"
+          -- "${3rd}/busted/library",
+        }
+        -- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
+        -- library = vim.api.nvim_get_runtime_file("", true)
+      }
+    })
+  end,
+  settings = {
+    Lua = {}
+  }
+}
 
