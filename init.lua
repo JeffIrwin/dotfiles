@@ -5,11 +5,134 @@
 --require("jeff")
 
 -- Packer package manager plugins
-require("plugins")
+--require("plugins")
 
 --require("lsp")
 
---********
+--------------------------------------------------------------------------------
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- Make sure to setup `mapleader` and `maplocalleader` before
+-- loading lazy.nvim so that mappings are correct.
+-- This is also a good place to setup other settings (vim.opt)
+
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
+-- Setup lazy.nvim
+require("lazy").setup({
+  spec = {
+    -- add your plugins here
+    {
+      "folke/tokyonight.nvim"
+    },
+
+    {
+      "christoomey/vim-tmux-navigator",
+      cmd = {
+        "TmuxNavigateLeft",
+        "TmuxNavigateDown",
+        "TmuxNavigateUp",
+        "TmuxNavigateRight",
+        "TmuxNavigatePrevious",
+        "TmuxNavigatorProcessList",
+      },
+      keys = {
+        { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
+        { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
+        { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
+        { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
+        { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+      },
+    },
+
+    {
+	"mfussenegger/nvim-lint",
+	event = { "BufWritePost", "InsertLeave" },
+	config = function()
+		local lint = require "lint"
+		local gfortran_diagnostic_args =
+		{
+			"-Wall",
+			"-Wextra",
+			"-Wno-tabs",
+			"-fmax-errors=5"
+		}
+
+		lint.linters_by_ft = {
+			fortran = {
+				"gfortran",
+			},
+		}
+
+
+		local pattern = "^([^:]+):(%d+):(%d+):%s+([^:]+):%s+(.*)$"
+
+		local groups = { "file", "lnum", "col", "severity", "message" }
+
+		local severity_map = {
+			["Error"] = vim.diagnostic.severity.ERROR,
+			["Warning"] = vim.diagnostic.severity.WARN,
+		}
+		local defaults = { ["source"] = "gfortran" }
+
+		local required_args = { "-fsyntax-only", "-fdiagnostics-plain-output" }
+		local args = vim.list_extend(required_args, gfortran_diagnostic_args)
+
+		lint.linters.gfortran = {
+			cmd = "gfortran",
+			stdin = false,
+
+			append_fname = true,
+			stream = "stderr",
+			env = nil,
+			args = args,
+			ignore_exitcode = true,
+			parser = require("lint.parser").from_pattern(pattern, groups, severity_map, defaults),
+		}
+	end,
+
+    }
+
+  },
+  -- Configure any other settings here. See the documentation for more details.
+  -- colorscheme that will be used when installing plugins.
+  --install = { colorscheme = { "habamax" } },
+  --install = { colorscheme = { "tokyonight-moon" } },
+  -- automatically check for plugin updates
+  checker = { enabled = true },
+})
+--------------------------------------------------------------------------------
+
+--require "config.lazy"
+
+vim.api.nvim_create_autocmd({"BufEnter", "InsertLeave", "BufWritePost"}, {
+   callback = function()
+      local lint_status, lint = pcall(require, "lint")
+      if lint_status then
+         lint.try_lint()
+      end
+   end
+})
+
+--------------------------------------------------------------------------------
 
 ---- Builtin colorschemes, no packer required
 --vim.cmd.colorscheme("default")
@@ -23,6 +146,7 @@ require("plugins")
 --vim.cmd.colorscheme("tokyonight-night")
 --vim.cmd.colorscheme("tokyonight-storm")
 vim.cmd.colorscheme("tokyonight-moon")
+--vim.cmd.colorscheme("habamax")
 
 ----vim.cmd.colorscheme("iceberg")
 --vim.cmd.colorscheme("rose-pine")
@@ -46,6 +170,20 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>", {noremap = true})
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", {noremap = true})
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>", {noremap = true})
 vim.keymap.set("n", "<C-h>", "<C-w><C-h>", {noremap = true})
+
+--vim.keymap.set("n", "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>", {noremap = true})
+--vim.keymap.set("n", "<c-h>", "TmuxNavigateLeft", {noremap = true})
+vim.keymap.set("n", "<c-h>", "<cmd>TmuxNavigateLeft<cr>", {noremap = true})
+vim.keymap.set("n", "<c-j>", "<cmd>TmuxNavigateDown<cr>", {noremap = true})
+vim.keymap.set("n", "<c-k>", "<cmd>TmuxNavigateUp<cr>", {noremap = true})
+vim.keymap.set("n", "<c-l>", "<cmd>TmuxNavigateRight<cr>", {noremap = true})
+vim.keymap.set("n", "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>", {noremap = true})
+
+--      { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
+--      { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
+--      { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
+--      { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
+--      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
 
 -- netrw (explorer) overrides normal keymaps.  this breaks the tmux integration
 -- and i'm not sure if i can do anything about that (although it works if you
@@ -172,6 +310,8 @@ vim.opt.wildignore:append { "*/scratch/*", "*/target/*", "*/build/*" }
 --	}
 --}
 
+-- fortls only seems to work in git repos. or maybe it needs fpm.toml or
+-- something :shrug:
 require'lspconfig'.fortls.setup{
     cmd = {
         'fortls',
@@ -225,4 +365,16 @@ require("lspconfig").lua_ls.setup {
     Lua = {}
   }
 }
+
+-- fortran linting
+--require "config.lazy"
+
+vim.api.nvim_create_autocmd({"BufEnter", "InsertLeave", "BufWritePost"}, {
+   callback = function()
+      local lint_status, lint = pcall(require, "lint")
+      if lint_status then
+         lint.try_lint()
+      end
+   end
+})
 
