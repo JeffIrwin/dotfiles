@@ -69,11 +69,15 @@ require("lazy").setup({
 	config = function()
 		local lint = require "lint"
 		local gfortran_diagnostic_args =
+		-- TODO: how to get include dir for .mod files? maybe fpm install lib
+		-- true, then include -I~/.local/include ?
 		{
 			"-Wall",
 			"-Wextra",
 			"-Wno-tabs",
-			"-fmax-errors=5"
+			"-I./build/gfortran_2654F75F5833692A/",
+			--"-I./build/gfortran_*/",
+			"-fmax-errors=5",
 		}
 
 		lint.linters_by_ft = {
@@ -82,9 +86,7 @@ require("lazy").setup({
 			},
 		}
 
-
 		local pattern = "^([^:]+):(%d+):(%d+):%s+([^:]+):%s+(.*)$"
-
 		local groups = { "file", "lnum", "col", "severity", "message" }
 
 		local severity_map = {
@@ -99,7 +101,6 @@ require("lazy").setup({
 		lint.linters.gfortran = {
 			cmd = "gfortran",
 			stdin = false,
-
 			append_fname = true,
 			stream = "stderr",
 			env = nil,
@@ -377,4 +378,6 @@ vim.api.nvim_create_autocmd({"BufEnter", "InsertLeave", "BufWritePost"}, {
       end
    end
 })
+
+vim.cmd("hi! Normal ctermbg=NONE guibg=NONE")
 
