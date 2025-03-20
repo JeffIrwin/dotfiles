@@ -1,4 +1,3 @@
-
 --------------------------------------------------------------------------------
 
 -- Make sure to setup `mapleader` and `maplocalleader` before
@@ -14,119 +13,123 @@ vim.g.maplocalleader = "\\"
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
+	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+	if vim.v.shell_error ~= 0 then
+		vim.api.nvim_echo({
+			{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+			{ out,                            "WarningMsg" },
 
-      { "\nPress any key to exit..." },
-    }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
-  end
+			{ "\nPress any key to exit..." },
+		}, true, {})
+		vim.fn.getchar()
+		os.exit(1)
+	end
 end
 vim.opt.rtp:prepend(lazypath)
 
 -- Setup lazy.nvim
 require("lazy").setup({
-  spec = {
-    -- add your plugins here
+	spec = {
+		-- add your plugins here
 
-	{
-		"neovim/nvim-lspconfig"
+		{
+			"neovim/nvim-lspconfig"
+		},
+
+		{
+			"folke/tokyonight.nvim"
+		},
+
+		{
+			"christoomey/vim-tmux-navigator",
+			cmd = {
+				"TmuxNavigateLeft",
+				"TmuxNavigateDown",
+				"TmuxNavigateUp",
+				"TmuxNavigateRight",
+				"TmuxNavigatePrevious",
+				"TmuxNavigatorProcessList",
+			},
+			keys = {
+				{ "<c-h>",  "<cmd><C-U>TmuxNavigateLeft<cr>" },
+				{ "<c-j>",  "<cmd><C-U>TmuxNavigateDown<cr>" },
+				{ "<c-k>",  "<cmd><C-U>TmuxNavigateUp<cr>" },
+				{ "<c-l>",  "<cmd><C-U>TmuxNavigateRight<cr>" },
+				{ "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+			},
+		},
+
+		{
+			-- Source for configuring nvim-lint with gfortran:
+			--
+			--     https://fortran-lang.discourse.group/t/linter-for-nvim/8088/13?u=jeff.irwin
+			--
+			"mfussenegger/nvim-lint",
+			event = { "BufWritePost", "InsertLeave" },
+			config = function()
+				local lint = require "lint"
+				local gfortran_diagnostic_args =
+				-- TODO: how to get include dir for .mod files? maybe fpm install lib
+				-- true, then include -I~/.local/include ?
+				{
+					"-Wall",
+					"-Wextra",
+					"-Wno-tabs",
+					--"-I./build/gfortran_2654F75F5833692A/",
+					"-I./build/include/",
+					"-fmax-errors=5",
+				}
+
+				lint.linters_by_ft = {
+					fortran = {
+						"gfortran",
+					},
+				}
+
+				local pattern = "^([^:]+):(%d+):(%d+):%s+([^:]+):%s+(.*)$"
+				local groups = { "file", "lnum", "col", "severity", "message" }
+
+				local severity_map = {
+					["Error"] = vim.diagnostic.severity.ERROR,
+					["Warning"] = vim.diagnostic.severity.WARN,
+				}
+				local defaults = { ["source"] = "gfortran" }
+
+				local required_args = { "-fsyntax-only", "-fdiagnostics-plain-output" }
+				local args = vim.list_extend(required_args, gfortran_diagnostic_args)
+
+				lint.linters.gfortran = {
+					cmd = "gfortran",
+					stdin = false,
+					append_fname = true,
+					stream = "stderr",
+					env = nil,
+					args = args,
+					ignore_exitcode = true,
+					parser = require("lint.parser").from_pattern(pattern, groups, severity_map, defaults),
+				}
+			end,
+
+		}
 	},
 
-    {
-      "folke/tokyonight.nvim"
-    },
-
-    {
-      "christoomey/vim-tmux-navigator",
-      cmd = {
-        "TmuxNavigateLeft",
-        "TmuxNavigateDown",
-        "TmuxNavigateUp",
-        "TmuxNavigateRight",
-        "TmuxNavigatePrevious",
-        "TmuxNavigatorProcessList",
-      },
-      keys = {
-        { "<c-h>" , "<cmd><C-U>TmuxNavigateLeft<cr>" },
-        { "<c-j>" , "<cmd><C-U>TmuxNavigateDown<cr>" },
-        { "<c-k>" , "<cmd><C-U>TmuxNavigateUp<cr>" },
-        { "<c-l>" , "<cmd><C-U>TmuxNavigateRight<cr>" },
-        { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
-      },
-    },
-
-    {
-	"mfussenegger/nvim-lint",
-	event = { "BufWritePost", "InsertLeave" },
-	config = function()
-		local lint = require "lint"
-		local gfortran_diagnostic_args =
-		-- TODO: how to get include dir for .mod files? maybe fpm install lib
-		-- true, then include -I~/.local/include ?
-		{
-			"-Wall",
-			"-Wextra",
-			"-Wno-tabs",
-			--"-I./build/gfortran_2654F75F5833692A/",
-			"-I./build/include/",
-			"-fmax-errors=5",
-		}
-
-		lint.linters_by_ft = {
-			fortran = {
-				"gfortran",
-			},
-		}
-
-		local pattern = "^([^:]+):(%d+):(%d+):%s+([^:]+):%s+(.*)$"
-		local groups = { "file", "lnum", "col", "severity", "message" }
-
-		local severity_map = {
-			["Error"] = vim.diagnostic.severity.ERROR,
-			["Warning"] = vim.diagnostic.severity.WARN,
-		}
-		local defaults = { ["source"] = "gfortran" }
-
-		local required_args = { "-fsyntax-only", "-fdiagnostics-plain-output" }
-		local args = vim.list_extend(required_args, gfortran_diagnostic_args)
-
-		lint.linters.gfortran = {
-			cmd = "gfortran",
-			stdin = false,
-			append_fname = true,
-			stream = "stderr",
-			env = nil,
-			args = args,
-			ignore_exitcode = true,
-			parser = require("lint.parser").from_pattern(pattern, groups, severity_map, defaults),
-		}
-	end,
-
-    }
-  },
-
-  -- Configure any other settings here. See the documentation for more details.
-  -- colorscheme that will be used when installing plugins.
-  --install = { colorscheme = { "habamax" } },
-  --install = { colorscheme = { "tokyonight-moon" } },
-  -- automatically check for plugin updates
-  checker = { enabled = true },
+	-- Configure any other settings here. See the documentation for more details.
+	-- colorscheme that will be used when installing plugins.
+	--install = { colorscheme = { "habamax" } },
+	--install = { colorscheme = { "tokyonight-moon" } },
+	-- automatically check for plugin updates
+	checker = { enabled = true },
 })
 --------------------------------------------------------------------------------
 
-vim.api.nvim_create_autocmd({"BufEnter", "InsertLeave", "BufWritePost"}, {
-   callback = function()
-      local lint_status, lint = pcall(require, "lint")
-      if lint_status then
-         lint.try_lint()
-      end
-   end
+vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
+	callback = function()
+		local lint_status, lint = pcall(require, "lint")
+		if lint_status then
+			lint.try_lint()
+		end
+	end
 })
 
 --------------------------------------------------------------------------------
@@ -161,17 +164,17 @@ vim.opt.relativenumber = true
 --
 --     https://thoughtbot.com/blog/vim-splits-move-faster-and-more-naturally#easier-split-navigations
 --
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", {noremap = true})
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", {noremap = true})
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", {noremap = true})
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", {noremap = true})
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { noremap = true })
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { noremap = true })
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { noremap = true })
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { noremap = true })
 
 -- idk why i have to set these TmuxNavigate* bindings in two places
-vim.keymap.set("n", "<c-h>" , "<cmd>TmuxNavigateLeft<cr>", {noremap = true})
-vim.keymap.set("n", "<c-j>" , "<cmd>TmuxNavigateDown<cr>", {noremap = true})
-vim.keymap.set("n", "<c-k>" , "<cmd>TmuxNavigateUp<cr>", {noremap = true})
-vim.keymap.set("n", "<c-l>" , "<cmd>TmuxNavigateRight<cr>", {noremap = true})
-vim.keymap.set("n", "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>", {noremap = true})
+vim.keymap.set("n", "<c-h>", "<cmd>TmuxNavigateLeft<cr>", { noremap = true })
+vim.keymap.set("n", "<c-j>", "<cmd>TmuxNavigateDown<cr>", { noremap = true })
+vim.keymap.set("n", "<c-k>", "<cmd>TmuxNavigateUp<cr>", { noremap = true })
+vim.keymap.set("n", "<c-l>", "<cmd>TmuxNavigateRight<cr>", { noremap = true })
+vim.keymap.set("n", "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>", { noremap = true })
 
 -- netrw (explorer) overrides normal keymaps.  this breaks the tmux integration
 -- and i'm not sure if i can do anything about that (although it works if you
@@ -214,34 +217,34 @@ vim.api.nvim_set_option("clipboard", "unnamed")
 vim.g.mapleader = " "
 
 --vim.keymap.set("n", "<leader>a", "<C-^>"     , {noremap = true}) -- alternate to the prev opened buf
-vim.keymap.set("n", "<leader> ", "<C-^>"     , {noremap = true}) -- alternate to the prev opened buf
+vim.keymap.set("n", "<leader> ", "<C-^>", { noremap = true })    -- alternate to the prev opened buf
 
-vim.keymap.set("n", "<leader>f", ":find "    , {noremap = true})
-vim.keymap.set("n", "<leader>l", ":ls<CR>:b ", {noremap = true})
-vim.keymap.set("n", "<leader>n", ":bnext<CR>", {noremap = true})
-vim.keymap.set("n", "<leader>p", ":bprev<CR>", {noremap = true})
-vim.keymap.set("n", "<leader>e", ":Ex<CR>"   , {noremap = true})
-vim.keymap.set("n", "<leader>s", ":Sex<CR>"  , {noremap = true})
-vim.keymap.set("n", "<leader>v", ":Vex!<CR>" , {noremap = true})
+vim.keymap.set("n", "<leader>f", ":find ", { noremap = true })
+vim.keymap.set("n", "<leader>l", ":ls<CR>:b ", { noremap = true })
+vim.keymap.set("n", "<leader>n", ":bnext<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>p", ":bprev<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>e", ":Ex<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>s", ":Sex<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>v", ":Vex!<CR>", { noremap = true })
 
--- Create the lsp keymaps only when a 
+-- Create the lsp keymaps only when a
 -- language server is active
 vim.api.nvim_create_autocmd('LspAttach', {
-  desc = 'LSP actions',
-  callback = function(event)
-    local opts = {buffer = event.buf}
+	desc = 'LSP actions',
+	callback = function(event)
+		local opts = { buffer = event.buf }
 
-    vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-    vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-    vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
-    vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
-    vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
-    vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
-    vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
-    vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-    vim.keymap.set({'n', 'x'}, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
-    vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
-  end,
+		vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+		vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
+		vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
+		vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
+		vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
+		vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
+		vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
+		vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+		vim.keymap.set({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
+		vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
+	end,
 })
 
 
@@ -249,28 +252,26 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 -- Jeff's dumb supertab replacement
 vim.keymap.set("i", "<Tab>",
-function()
+	function()
+		local col = vim.fn.col(".") - 1
 
-	local col = vim.fn.col(".") - 1
+		-- If we're at the beginning of the line or on whitespace, insert a tab
+		-- literal.  Otherwise, map to previous autocomplete (Ctrl+p)
+		--
+		-- Ref:
+		--
+		--     https://github.com/elianiva/dotfiles/blob/b0742981158c89063593ce27f74f780f3474d331/nvim/.config/nvim/lua/modules/_util.lua
 
-	-- If we're at the beginning of the line or on whitespace, insert a tab
-	-- literal.  Otherwise, map to previous autocomplete (Ctrl+p)
-	--
-	-- Ref:
-	--
-	--     https://github.com/elianiva/dotfiles/blob/b0742981158c89063593ce27f74f780f3474d331/nvim/.config/nvim/lua/modules/_util.lua
-
-	if col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
-		return "<Tab>"
-	else
-		return "<C-p>"
-	end
-
-end, {expr = true, noremap = true})
+		if col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
+			return "<Tab>"
+		else
+			return "<C-p>"
+		end
+	end, { expr = true, noremap = true })
 
 --------------------------------------------------------------------------------
 
--- changemewtf's fuzzy finder.  Usage: ```<leader>f *pattern*<Tab>``` or 
+-- changemewtf's fuzzy finder.  Usage: ```<leader>f *pattern*<Tab>``` or
 -- ```:find *pattern*<Enter>```.  For example, I have a file under this
 -- directory with this path and name:
 --
@@ -293,46 +294,46 @@ vim.opt.wildignore:append { "*/scratch/*", "*/target/*", "*/build/*" }
 --})
 
 --********
- --lua
+--lua
 
 --require'lspconfig'.lua_ls.setup{}
 
 require("lspconfig").lua_ls.setup {
-  on_init = function(client)
-    if client.workspace_folders then
-      local path = client.workspace_folders[1].name
+	on_init = function(client)
+		if client.workspace_folders then
+			local path = client.workspace_folders[1].name
 
-      if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc')) then
-        return
-      end
-    end
+			if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc')) then
+				return
+			end
+		end
 
-    client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-      runtime = {
-        -- Tell the language server which version of Lua you're using
-        -- (most likely LuaJIT in the case of Neovim)
+		client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+			runtime = {
+				-- Tell the language server which version of Lua you're using
+				-- (most likely LuaJIT in the case of Neovim)
 
-        version = 'LuaJIT'
-      },
-      -- Make the server aware of Neovim runtime files
+				version = 'LuaJIT'
+			},
+			-- Make the server aware of Neovim runtime files
 
-      workspace = {
-        checkThirdParty = false,
-        library = {
-          vim.env.VIMRUNTIME,
-          --vim.env.VIMRUNTIME + "/lua",
-          -- Depending on the usage, you might want to add additional paths here.
-          --"${3rd}/luv/library",
-          -- "${3rd}/busted/library",
-        }
-        -- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
-        -- library = vim.api.nvim_get_runtime_file("", true)
-      }
-    })
-  end,
-  settings = {
-    Lua = {}
-  }
+			workspace = {
+				checkThirdParty = false,
+				library = {
+					vim.env.VIMRUNTIME,
+					--vim.env.VIMRUNTIME + "/lua",
+					-- Depending on the usage, you might want to add additional paths here.
+					--"${3rd}/luv/library",
+					-- "${3rd}/busted/library",
+				}
+				-- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
+				-- library = vim.api.nvim_get_runtime_file("", true)
+			}
+		})
+	end,
+	settings = {
+		Lua = {}
+	}
 }
 
 --********
@@ -348,31 +349,30 @@ require("lspconfig").lua_ls.setup {
 
 -- fortls only seems to work in git repos. or maybe it needs fpm.toml or
 -- something :shrug:
-require'lspconfig'.fortls.setup{
-    cmd = {
-        'fortls',
-        '--lowercase_intrinsics',
-        '--hover_signature',
-        '--hover_language=fortran',
-        '--use_signature_help'
-    }
+require 'lspconfig'.fortls.setup {
+	cmd = {
+		'fortls',
+		'--lowercase_intrinsics',
+		'--hover_signature',
+		'--hover_language=fortran',
+		'--use_signature_help'
+	}
 }
 
 --********
 -- python
-require("lspconfig").pyright.setup{}
+require("lspconfig").pyright.setup {}
 
 -- fortran linting
 --require "config.lazy"
 
-vim.api.nvim_create_autocmd({"BufEnter", "InsertLeave", "BufWritePost"}, {
-   callback = function()
-      local lint_status, lint = pcall(require, "lint")
-      if lint_status then
-         lint.try_lint()
-      end
-   end
+vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
+	callback = function()
+		local lint_status, lint = pcall(require, "lint")
+		if lint_status then
+			lint.try_lint()
+		end
+	end
 })
 
 vim.cmd("hi! Normal ctermbg=NONE guibg=NONE")
-

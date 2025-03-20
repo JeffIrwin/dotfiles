@@ -3,11 +3,12 @@ FROM ubuntu:24.04
 
 WORKDIR /workdir
 
-RUN apt update -y
-RUN apt install -y curl
-RUN apt install -y git
-RUN apt install -y pip
-#RUN apt install -y npm
+RUN apt-get update -y
+RUN apt-get install -y curl
+RUN apt-get install -y git
+RUN apt-get install -y pip
+RUN apt-get install -y tmux
+#RUN apt-get install -y npm
 
 # Install nvim
 RUN curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
