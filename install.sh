@@ -35,13 +35,14 @@ cp alacritty.toml !$
 #
 # We don't really need the tmux files et al here but 🤷
 mkdir -p  ~/.config/nvim/
+rm -rf pack
 cp -r ./* ~/.config/nvim/
 
-# Setup packer as the nvim package manager
-rm -rf ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-
-nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+## Setup packer as the nvim package manager
+#rm -rf ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+#git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+#
+#nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 #nvim -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 
 cp .bashrc  ~

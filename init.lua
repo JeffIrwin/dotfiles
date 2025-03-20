@@ -39,6 +39,10 @@ vim.g.maplocalleader = "\\"
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
+	{
+		"neovim/nvim-lspconfig"
+	},
+
     -- add your plugins here
     {
       "folke/tokyonight.nvim"
@@ -75,8 +79,8 @@ require("lazy").setup({
 			"-Wall",
 			"-Wextra",
 			"-Wno-tabs",
-			"-I./build/gfortran_2654F75F5833692A/",
-			--"-I./build/gfortran_*/",
+			--"-I./build/gfortran_2654F75F5833692A/",
+			"-I./build/include/",
 			"-fmax-errors=5",
 		}
 
@@ -157,8 +161,6 @@ vim.cmd.colorscheme("tokyonight-moon")
 -- Hybrid line numbers: show the current line as absolute and others as relative
 vim.opt.number         = true
 vim.opt.relativenumber = true
-
---print("hello")
 
 -- Remap split-window navigation commands, e.g. Ctrl+j instead of the standard
 -- Ctrl+w Ctrl+j
@@ -300,6 +302,54 @@ vim.opt.wildignore:append { "*/scratch/*", "*/target/*", "*/build/*" }
 
 -- LSPs
 
+--require("lazy").setup({
+---- All of the packages goes here
+--    "neovim/nvim-lspconfig"
+--})
+
+--********
+ --lua
+
+--require'lspconfig'.lua_ls.setup{}
+
+require("lspconfig").lua_ls.setup {
+  on_init = function(client)
+    if client.workspace_folders then
+      local path = client.workspace_folders[1].name
+
+      if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc')) then
+        return
+      end
+    end
+
+    client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+      runtime = {
+        -- Tell the language server which version of Lua you're using
+        -- (most likely LuaJIT in the case of Neovim)
+
+        version = 'LuaJIT'
+      },
+      -- Make the server aware of Neovim runtime files
+
+      workspace = {
+        checkThirdParty = false,
+        library = {
+          vim.env.VIMRUNTIME,
+          --vim.env.VIMRUNTIME + "/lua",
+          -- Depending on the usage, you might want to add additional paths here.
+          --"${3rd}/luv/library",
+          -- "${3rd}/busted/library",
+        }
+        -- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
+        -- library = vim.api.nvim_get_runtime_file("", true)
+      }
+    })
+  end,
+  settings = {
+    Lua = {}
+  }
+}
+
 --********
 -- fortran
 
@@ -326,46 +376,6 @@ require'lspconfig'.fortls.setup{
 --********
 -- python
 require("lspconfig").pyright.setup{}
-
---********
--- lua
-
-require("lspconfig").lua_ls.setup {
-  on_init = function(client)
-    if client.workspace_folders then
-      local path = client.workspace_folders[1].name
-
-      if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc')) then
-        return
-      end
-    end
-
-    client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-      runtime = {
-        -- Tell the language server which version of Lua you're using
-        -- (most likely LuaJIT in the case of Neovim)
-
-        version = 'LuaJIT'
-      },
-      -- Make the server aware of Neovim runtime files
-
-      workspace = {
-        checkThirdParty = false,
-        library = {
-          vim.env.VIMRUNTIME
-          -- Depending on the usage, you might want to add additional paths here.
-          -- "${3rd}/luv/library"
-          -- "${3rd}/busted/library",
-        }
-        -- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
-        -- library = vim.api.nvim_get_runtime_file("", true)
-      }
-    })
-  end,
-  settings = {
-    Lua = {}
-  }
-}
 
 -- fortran linting
 --require "config.lazy"
