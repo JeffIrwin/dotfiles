@@ -28,7 +28,8 @@ cp .tmux.conf ~
 #APPDATA="/mnt/c/Users/$USERNAME/AppData/Roaming/"
 APPDATA="/mnt/c/Users/$USER/AppData/Roaming/"
 mkdir -p "$APPDATA/alacritty/"
-cp alacritty.toml !$
+#cp alacritty.toml !$
+cp alacritty.toml $!
 
 # This works with the repo cloned anywhere.  If you're going to modify and push
 # changes, it's better to actually clone directly to the destination

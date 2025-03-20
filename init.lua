@@ -1,15 +1,15 @@
 
 --------------------------------------------------------------------------------
 
----- This is how you include ./lua/jeff/init.lua
---require("jeff")
+-- Make sure to setup `mapleader` and `maplocalleader` before
+-- loading lazy.nvim so that mappings are correct.
+-- This is also a good place to setup other settings (vim.opt)
 
--- Packer package manager plugins
---require("plugins")
-
---require("lsp")
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
 
 --------------------------------------------------------------------------------
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
@@ -29,21 +29,15 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Make sure to setup `mapleader` and `maplocalleader` before
--- loading lazy.nvim so that mappings are correct.
--- This is also a good place to setup other settings (vim.opt)
-
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
-
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
+    -- add your plugins here
+
 	{
 		"neovim/nvim-lspconfig"
 	},
 
-    -- add your plugins here
     {
       "folke/tokyonight.nvim"
     },
@@ -59,10 +53,10 @@ require("lazy").setup({
         "TmuxNavigatorProcessList",
       },
       keys = {
-        { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
-        { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
-        { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
-        { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
+        { "<c-h>" , "<cmd><C-U>TmuxNavigateLeft<cr>" },
+        { "<c-j>" , "<cmd><C-U>TmuxNavigateDown<cr>" },
+        { "<c-k>" , "<cmd><C-U>TmuxNavigateUp<cr>" },
+        { "<c-l>" , "<cmd><C-U>TmuxNavigateRight<cr>" },
         { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
       },
     },
@@ -115,8 +109,8 @@ require("lazy").setup({
 	end,
 
     }
-
   },
+
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
   --install = { colorscheme = { "habamax" } },
@@ -125,8 +119,6 @@ require("lazy").setup({
   checker = { enabled = true },
 })
 --------------------------------------------------------------------------------
-
---require "config.lazy"
 
 vim.api.nvim_create_autocmd({"BufEnter", "InsertLeave", "BufWritePost"}, {
    callback = function()
@@ -174,19 +166,12 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", {noremap = true})
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>", {noremap = true})
 vim.keymap.set("n", "<C-h>", "<C-w><C-h>", {noremap = true})
 
---vim.keymap.set("n", "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>", {noremap = true})
---vim.keymap.set("n", "<c-h>", "TmuxNavigateLeft", {noremap = true})
-vim.keymap.set("n", "<c-h>", "<cmd>TmuxNavigateLeft<cr>", {noremap = true})
-vim.keymap.set("n", "<c-j>", "<cmd>TmuxNavigateDown<cr>", {noremap = true})
-vim.keymap.set("n", "<c-k>", "<cmd>TmuxNavigateUp<cr>", {noremap = true})
-vim.keymap.set("n", "<c-l>", "<cmd>TmuxNavigateRight<cr>", {noremap = true})
+-- idk why i have to set these TmuxNavigate* bindings in two places
+vim.keymap.set("n", "<c-h>" , "<cmd>TmuxNavigateLeft<cr>", {noremap = true})
+vim.keymap.set("n", "<c-j>" , "<cmd>TmuxNavigateDown<cr>", {noremap = true})
+vim.keymap.set("n", "<c-k>" , "<cmd>TmuxNavigateUp<cr>", {noremap = true})
+vim.keymap.set("n", "<c-l>" , "<cmd>TmuxNavigateRight<cr>", {noremap = true})
 vim.keymap.set("n", "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>", {noremap = true})
-
---      { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
---      { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
---      { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
---      { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
---      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
 
 -- netrw (explorer) overrides normal keymaps.  this breaks the tmux integration
 -- and i'm not sure if i can do anything about that (although it works if you
