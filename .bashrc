@@ -123,6 +123,7 @@ PATH=$PATH:/home/linuxbrew/.linuxbrew/bin/
 PATH=$PATH:/snap/bin/
 
 alias sy=syntran
+alias docker='sudo docker'
 
 alias vi=nvim
 alias vim=nvim

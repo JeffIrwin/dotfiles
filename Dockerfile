@@ -8,6 +8,7 @@ RUN apt-get install -y curl
 RUN apt-get install -y git
 RUN apt-get install -y pip
 RUN apt-get install -y tmux
+RUN apt-get install -y gfortran
 #RUN apt-get install -y npm
 
 # Install nvim
@@ -17,7 +18,7 @@ ENV PATH=$PATH:/opt/nvim-linux-x86_64/bin/
 #RUN nvim --version
 
 # pip can't run as root without "breaking" system packages
-RUN pip install fortls --break-system-packages   # install fortran lsp
+RUN pip install fortls  --break-system-packages   # install fortran lsp
 RUN pip install pyright --break-system-packages  # install python lvp
 #RUN npm i -g pyright
 RUN fortls --version
@@ -30,7 +31,4 @@ RUN lua-language-server --version
 
 COPY . .
 RUN ./install.sh
-
-# TODO: move this to install.sh
-RUN nvim --headless "+Lazy! sync" +qa
 

@@ -118,6 +118,7 @@ require("lazy").setup({
 	-- colorscheme that will be used when installing plugins.
 	--install = { colorscheme = { "habamax" } },
 	--install = { colorscheme = { "tokyonight-moon" } },
+
 	-- automatically check for plugin updates
 	checker = { enabled = true },
 })
@@ -189,7 +190,7 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 -- Use standard vim yank `y` and put `p` to copy/paste into/out-of vim
-vim.api.nvim_set_option("clipboard", "unnamed")
+vim.api.nvim_set_option_value("clipboard", "unnamed", { "global" })
 
 ---- not sure why i resorted to the stuff below, but the "clipboard" "unnamed"
 ---- setting above, in conjunction with "save_to_clipboard" in alacritty.toml,
@@ -217,7 +218,7 @@ vim.api.nvim_set_option("clipboard", "unnamed")
 vim.g.mapleader = " "
 
 --vim.keymap.set("n", "<leader>a", "<C-^>"     , {noremap = true}) -- alternate to the prev opened buf
-vim.keymap.set("n", "<leader> ", "<C-^>", { noremap = true })    -- alternate to the prev opened buf
+vim.keymap.set("n", "<leader> ", "<C-^>", { noremap = true }) -- alternate to the prev opened buf
 
 vim.keymap.set("n", "<leader>f", ":find ", { noremap = true })
 vim.keymap.set("n", "<leader>l", ":ls<CR>:b ", { noremap = true })
@@ -227,8 +228,7 @@ vim.keymap.set("n", "<leader>e", ":Ex<CR>", { noremap = true })
 vim.keymap.set("n", "<leader>s", ":Sex<CR>", { noremap = true })
 vim.keymap.set("n", "<leader>v", ":Vex!<CR>", { noremap = true })
 
--- Create the lsp keymaps only when a
--- language server is active
+-- Create the lsp keymaps only when a language server is active
 vim.api.nvim_create_autocmd('LspAttach', {
 	desc = 'LSP actions',
 	callback = function(event)
@@ -246,7 +246,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
 	end,
 })
-
 
 --------------------------------------------------------------------------------
 
@@ -288,15 +287,8 @@ vim.opt.wildignore:append { "*/scratch/*", "*/target/*", "*/build/*" }
 
 -- LSPs
 
---require("lazy").setup({
----- All of the packages goes here
---    "neovim/nvim-lspconfig"
---})
-
 --********
 --lua
-
---require'lspconfig'.lua_ls.setup{}
 
 require("lspconfig").lua_ls.setup {
 	on_init = function(client)
@@ -312,11 +304,9 @@ require("lspconfig").lua_ls.setup {
 			runtime = {
 				-- Tell the language server which version of Lua you're using
 				-- (most likely LuaJIT in the case of Neovim)
-
 				version = 'LuaJIT'
 			},
 			-- Make the server aware of Neovim runtime files
-
 			workspace = {
 				checkThirdParty = false,
 				library = {
@@ -339,17 +329,9 @@ require("lspconfig").lua_ls.setup {
 --********
 -- fortran
 
---require'lspconfig'.fortls.setup{}
---require'lspconfig'.fortls.setup{
---	--on_attach = on_attach,
---	cmd = {
---		'fortls',
---	}
---}
-
 -- fortls only seems to work in git repos. or maybe it needs fpm.toml or
 -- something :shrug:
-require 'lspconfig'.fortls.setup {
+require("lspconfig").fortls.setup {
 	cmd = {
 		'fortls',
 		'--lowercase_intrinsics',
@@ -363,9 +345,9 @@ require 'lspconfig'.fortls.setup {
 -- python
 require("lspconfig").pyright.setup {}
 
--- fortran linting
---require "config.lazy"
+--********
 
+-- fortran linting
 vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
 	callback = function()
 		local lint_status, lint = pcall(require, "lint")
@@ -375,4 +357,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
 	end
 })
 
+--------------------------------------------------------------------------------
+
 vim.cmd("hi! Normal ctermbg=NONE guibg=NONE")
+
