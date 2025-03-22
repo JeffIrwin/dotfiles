@@ -190,7 +190,7 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 -- Use standard vim yank `y` and put `p` to copy/paste into/out-of vim
-vim.api.nvim_set_option_value("clipboard", "unnamed", { "global" })
+vim.api.nvim_set_option_value("clipboard", "unnamed", {})
 
 ---- not sure why i resorted to the stuff below, but the "clipboard" "unnamed"
 ---- setting above, in conjunction with "save_to_clipboard" in alacritty.toml,
