@@ -120,7 +120,11 @@ require("lazy").setup({
 	--install = { colorscheme = { "tokyonight-moon" } },
 
 	-- automatically check for plugin updates
-	checker = { enabled = true },
+	checker =
+	{
+		enabled = true,
+		notify = false  -- don't nag
+	},
 })
 --------------------------------------------------------------------------------
 
