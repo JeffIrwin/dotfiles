@@ -118,11 +118,15 @@ fi
 
 #===============================================================================
 
+# Remove stack limit, which can otherwise interfere with large recursion depths
+# in syntran
+ulimit -s unlimited
+
 PATH=$PATH:~/.local/bin
 PATH=$PATH:/home/linuxbrew/.linuxbrew/bin/
 PATH=$PATH:/snap/bin/
 
-alias sy=syntran
+alias sy='rlwrap syntran'
 alias docker='sudo docker'
 
 alias vi=nvim
