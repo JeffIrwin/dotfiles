@@ -10,7 +10,11 @@ RUN apt-get install -y git       # needed to bootstrap lazy.nvim
 RUN apt-get install -y gfortran  # fortran compiler
 
 # Install nvim
-RUN curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+
+## nvim 0.11.0 doesn't display linted errors
+#RUN curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.10.4/nvim-linux-x86_64.tar.gz
+
 RUN tar -C /opt -xzf nvim-linux-x86_64.tar.gz
 ENV PATH=$PATH:/opt/nvim-linux-x86_64/bin/
 #RUN nvim --version
