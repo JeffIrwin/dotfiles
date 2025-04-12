@@ -73,11 +73,12 @@ require("lazy").setup({
 				-- TODO: how to get include dir for .mod files? maybe fpm install lib
 				-- true, then include -I~/.local/include ?
 				{
+					-- Add your module location after `-I`, otherwise linting
+					-- will stop after the first unfound `use`
+					"-I./build/include/",
 					"-Wall",
 					"-Wextra",
 					"-Wno-tabs",
-					--"-I./build/gfortran_2654F75F5833692A/",
-					"-I./build/include/",
 					"-fmax-errors=5",
 				}
 
