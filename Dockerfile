@@ -1,13 +1,13 @@
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 WORKDIR /workdir
 
-RUN apt-get update -y
-RUN apt-get install -y pip       # needed to install fortls
-RUN apt-get install -y curl      # needed to install nvim
-RUN apt-get install -y git       # needed to bootstrap lazy.nvim
-RUN apt-get install -y gfortran  # fortran compiler
+RUN apt-get update -y && apt-get install -y \
+	pip       \
+	curl      \
+	git       \
+	gfortran
 
 # Install nvim
 
@@ -20,8 +20,8 @@ ENV PATH=$PATH:/opt/nvim-linux-x86_64/bin/
 #RUN nvim --version
 
 # pip can't run as root without "breaking" system packages
-#RUN pip install fortls  --break-system-packages   # install fortran lsp
-RUN pip install fortls  # install fortran lsp
+RUN pip install fortls  --break-system-packages   # install fortran lsp
+#RUN pip install fortls  # install fortran lsp
 #RUN fortls --version
 
 COPY . .
