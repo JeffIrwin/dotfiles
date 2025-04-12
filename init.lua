@@ -76,6 +76,7 @@ require("lazy").setup({
 					-- Add your module location after `-I`, otherwise linting
 					-- will stop after the first unfound `use`
 					"-I./build/include/",
+					"-J./build/",  -- put generated module files in build dir
 					"-Wall",
 					"-Wextra",
 					"-Wno-tabs",
