@@ -3,6 +3,7 @@ FROM ubuntu:24.04
 
 WORKDIR /workdir
 
+# TODO: there's a good reason to do all apt-get as one line
 RUN apt-get update -y
 RUN apt-get install -y curl
 RUN apt-get install -y git

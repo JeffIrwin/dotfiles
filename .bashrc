@@ -140,7 +140,11 @@ alias ....='cd ../../..'
 o()
 {
 	# Open a file $1 with the default Windows app for that file type
-	cmd.exe /s /c " start /b "$1" "
+
+	# cmd can't run in wsl dirs, but explorer can
+	pushd "$(dirname "$1")"
+	explorer.exe "$(basename "$1")"
+	popd
 }
 
 pv()
