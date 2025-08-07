@@ -1,9 +1,5 @@
 --------------------------------------------------------------------------------
 
--- Make sure to setup `mapleader` and `maplocalleader` before
--- loading lazy.nvim so that mappings are correct.
--- This is also a good place to setup other settings (vim.opt)
-
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
@@ -35,63 +31,16 @@ vim.pack.add({
 		},
 	},
 	{
-		-- Source for configuring nvim-lint with gfortran:
-		--
-		--     https://fortran-lang.discourse.group/t/linter-for-nvim/8088/13?u=jeff.irwin
-		--
 		src = "https://github.com/mfussenegger/nvim-lint",
-		--event = { "BufWritePost", "InsertLeave" },
-		--config = function()
-		--	local lint = require "lint"
-		--	local gfortran_diagnostic_args =
-		--	-- TODO: how to get include dir for .mod files? maybe fpm install lib
-		--	-- true, then include -I~/.local/include ?
-		--	{
-		--		-- Add your module location after `-I`, otherwise linting
-		--		-- will stop after the first unfound `use`
-		--		"-I./build/include/",
-		--		"-J./build/",  -- put generated module files in build dir
-		--		"-Wall",
-		--		"-Wextra",
-		--		"-Wno-tabs",
-		--		"-cpp",
-		--		"-fmax-errors=5",
-		--	}
-
-		--	lint.linters_by_ft = {
-		--		fortran = {
-		--			"gfortran",
-		--		},
-		--	}
-
-		--	local pattern = "^([^:]+):(%d+):(%d+):%s+([^:]+):%s+(.*)$"
-		--	local groups = { "file", "lnum", "col", "severity", "message" }
-
-		--	local severity_map = {
-		--		["Error"] = vim.diagnostic.severity.ERROR,
-		--		["Warning"] = vim.diagnostic.severity.WARN,
-		--	}
-		--	local defaults = { ["source"] = "gfortran" }
-
-		--	local required_args = { "-fsyntax-only", "-fdiagnostics-plain-output" }
-		--	local args = vim.list_extend(required_args, gfortran_diagnostic_args)
-
-		--	lint.linters.gfortran = {
-		--		cmd = "gfortran",
-		--		stdin = false,
-		--		append_fname = true,
-		--		stream = "stderr",
-		--		env = nil,
-		--		args = args,
-		--		ignore_exitcode = true,
-		--		parser = require("lint.parser").from_pattern(pattern, groups, severity_map, defaults),
-		--	}
-		--end,
 	}
 })
 
 --------------------------------------------------------------------------------
 
+-- Source for configuring nvim-lint with gfortran:
+--
+--     https://fortran-lang.discourse.group/t/linter-for-nvim/8088/13?u=jeff.irwin
+--
 local pattern = "^([^:]+):(%d+):(%d+):%s+([^:]+):%s+(.*)$"
 local groups = { "file", "lnum", "col", "severity", "message" }
 local severity_map = {
@@ -100,40 +49,44 @@ local severity_map = {
 }
 local defaults = { ["source"] = "gfortran" }
 
-require('lint').linters.fortran = {
-  cmd = 'gfortran',
-  stdin = false,
-  append_fname = true,
-  args = {
+require('lint').linters.ShadowRimFortranLinter = {
+	cmd = 'gfortran',
+	stdin = false,
+	append_fname = true,
+	args = {
 
-	-- Requirede arguments
-	"-fsyntax-only",
-	"-fdiagnostics-plain-output",
+		-- Required arguments
+		"-fsyntax-only",
+		"-fdiagnostics-plain-output",
 
-	-- Other arguments
+		-- Other arguments
 
-    -- Add your module location after `-I`, otherwise linting
-    -- will stop after the first unfound `use`
-    "-I./build/include/",
-    "-J./build/",  -- put generated module files in build dir
-    "-Wall",
-    "-Wextra",
-    "-Wno-tabs",
-    "-cpp",
-    "-fmax-errors=5",
-  },
-  stream = "stderr",
-  ignore_exitcode = true,
-  env = nil,
-  --parser = your_parse_function
-  parser = require("lint.parser").from_pattern(pattern, groups, severity_map, defaults)
+		-- Add your module location after `-I`, otherwise linting
+		-- will stop after the first unfound `use`
+		"-I./build/include/",
+		"-J./build/",  -- put generated module files in build dir
+		"-Wall",
+		"-Wextra",
+		"-Wno-tabs",
+		"-cpp",
+		"-fmax-errors=5",
+	},
+	stream = "stderr",
+	ignore_exitcode = true,
+	env = nil,
+	parser = require("lint.parser").from_pattern(pattern, groups, severity_map, defaults)
 }
 
----- Builtin colorschemes, no packer required
+require('lint').linters_by_ft = {
+	--markdown = {'vale'},
+	fortran = {'ShadowRimFortranLinter'},
+}
+
+---- Builtin colorschemes, no packages required
 --vim.cmd.colorscheme("default")
 --vim.cmd.colorscheme("koehler")
 
--- These colorschemes require packer plugins
+-- These colorschemes require plugins
 
 ----vim.opt.background = "dark" -- or "light" for light mode
 ----vim.cmd.colorscheme("gruvbox")
@@ -335,8 +288,6 @@ require("lspconfig").lua_ls.setup {
 --********
 -- fortran
 
--- fortls only seems to work in git repos. or maybe it needs fpm.toml or
--- something :shrug:
 require("lspconfig").fortls.setup {
 	cmd = {
 		'fortls',
@@ -353,20 +304,10 @@ require("lspconfig").pyright.setup {}
 
 --********
 
---vim.api.nvim_create_autocmd({ "BufWritePost" }, {
---  callback = function()
---    -- try_lint without arguments runs the linters defined in `linters_by_ft`
---    -- for the current filetype
---    require("lint").try_lint()
---  end,
---})
-
-require('lint').linters_by_ft = {
-  markdown = {'vale'},
-  fortran = {'fortran'},
-}
-
 -- fortran linting
+--
+-- TODO: DRY
+--
 --vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
 vim.api.nvim_create_autocmd("BufEnter", {
 	callback = function()
@@ -397,7 +338,7 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 
 vim.diagnostic.enable = true
 vim.diagnostic.config({
-  virtual_lines = true,
+	virtual_lines = true,
 })
 
 vim.cmd("hi! Normal ctermbg=NONE guibg=NONE")
