@@ -9,137 +9,125 @@ vim.g.maplocalleader = "\\"
 
 --------------------------------------------------------------------------------
 
--- Bootstrap lazy.nvim
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-	if vim.v.shell_error ~= 0 then
-		vim.api.nvim_echo({
-			{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-			{ out,                            "WarningMsg" },
-
-			{ "\nPress any key to exit..." },
-		}, true, {})
-		vim.fn.getchar()
-		os.exit(1)
-	end
-end
-vim.opt.rtp:prepend(lazypath)
-
--- Setup lazy.nvim
-require("lazy").setup({
-	spec = {
-		-- add your plugins here
-
-		{
-			"neovim/nvim-lspconfig"
-		},
-
-		{
-			"folke/tokyonight.nvim"
-		},
-
-		{
-			"christoomey/vim-tmux-navigator",
-			cmd = {
-				"TmuxNavigateLeft",
-				"TmuxNavigateDown",
-				"TmuxNavigateUp",
-				"TmuxNavigateRight",
-				"TmuxNavigatePrevious",
-				"TmuxNavigatorProcessList",
-			},
-			keys = {
-				{ "<c-h>",  "<cmd><C-U>TmuxNavigateLeft<cr>" },
-				{ "<c-j>",  "<cmd><C-U>TmuxNavigateDown<cr>" },
-				{ "<c-k>",  "<cmd><C-U>TmuxNavigateUp<cr>" },
-				{ "<c-l>",  "<cmd><C-U>TmuxNavigateRight<cr>" },
-				{ "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
-			},
-		},
-
-		{
-			-- Source for configuring nvim-lint with gfortran:
-			--
-			--     https://fortran-lang.discourse.group/t/linter-for-nvim/8088/13?u=jeff.irwin
-			--
-			"mfussenegger/nvim-lint",
-			event = { "BufWritePost", "InsertLeave" },
-			config = function()
-				local lint = require "lint"
-				local gfortran_diagnostic_args =
-				-- TODO: how to get include dir for .mod files? maybe fpm install lib
-				-- true, then include -I~/.local/include ?
-				{
-					-- Add your module location after `-I`, otherwise linting
-					-- will stop after the first unfound `use`
-					"-I./build/include/",
-					"-J./build/",  -- put generated module files in build dir
-					"-Wall",
-					"-Wextra",
-					"-Wno-tabs",
-					"-fmax-errors=5",
-				}
-
-				lint.linters_by_ft = {
-					fortran = {
-						"gfortran",
-					},
-				}
-
-				local pattern = "^([^:]+):(%d+):(%d+):%s+([^:]+):%s+(.*)$"
-				local groups = { "file", "lnum", "col", "severity", "message" }
-
-				local severity_map = {
-					["Error"] = vim.diagnostic.severity.ERROR,
-					["Warning"] = vim.diagnostic.severity.WARN,
-				}
-				local defaults = { ["source"] = "gfortran" }
-
-				local required_args = { "-fsyntax-only", "-fdiagnostics-plain-output" }
-				local args = vim.list_extend(required_args, gfortran_diagnostic_args)
-
-				lint.linters.gfortran = {
-					cmd = "gfortran",
-					stdin = false,
-					append_fname = true,
-					stream = "stderr",
-					env = nil,
-					args = args,
-					ignore_exitcode = true,
-					parser = require("lint.parser").from_pattern(pattern, groups, severity_map, defaults),
-				}
-			end,
-
-		}
-	},
-
-	-- Configure any other settings here. See the documentation for more details.
-	-- colorscheme that will be used when installing plugins.
-	--install = { colorscheme = { "habamax" } },
-	--install = { colorscheme = { "tokyonight-moon" } },
-
-	-- automatically check for plugin updates
-	checker =
+vim.pack.add({
 	{
-		enabled = true,
-		notify = false  -- don't nag
+		src = "https://github.com/neovim/nvim-lspconfig"
 	},
+	{
+		src = 'https://github.com/folke/tokyonight.nvim'
+	},
+	{
+		src = "https://github.com/christoomey/vim-tmux-navigator",
+		cmd = {
+			"TmuxNavigateLeft",
+			"TmuxNavigateDown",
+			"TmuxNavigateUp",
+			"TmuxNavigateRight",
+			"TmuxNavigatePrevious",
+			"TmuxNavigatorProcessList",
+		},
+		keys = {
+			{ "<c-h>",  "<cmd><C-U>TmuxNavigateLeft<cr>" },
+			{ "<c-j>",  "<cmd><C-U>TmuxNavigateDown<cr>" },
+			{ "<c-k>",  "<cmd><C-U>TmuxNavigateUp<cr>" },
+			{ "<c-l>",  "<cmd><C-U>TmuxNavigateRight<cr>" },
+			{ "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+		},
+	},
+	{
+		-- Source for configuring nvim-lint with gfortran:
+		--
+		--     https://fortran-lang.discourse.group/t/linter-for-nvim/8088/13?u=jeff.irwin
+		--
+		src = "https://github.com/mfussenegger/nvim-lint",
+		--event = { "BufWritePost", "InsertLeave" },
+		--config = function()
+		--	local lint = require "lint"
+		--	local gfortran_diagnostic_args =
+		--	-- TODO: how to get include dir for .mod files? maybe fpm install lib
+		--	-- true, then include -I~/.local/include ?
+		--	{
+		--		-- Add your module location after `-I`, otherwise linting
+		--		-- will stop after the first unfound `use`
+		--		"-I./build/include/",
+		--		"-J./build/",  -- put generated module files in build dir
+		--		"-Wall",
+		--		"-Wextra",
+		--		"-Wno-tabs",
+		--		"-cpp",
+		--		"-fmax-errors=5",
+		--	}
+
+		--	lint.linters_by_ft = {
+		--		fortran = {
+		--			"gfortran",
+		--		},
+		--	}
+
+		--	local pattern = "^([^:]+):(%d+):(%d+):%s+([^:]+):%s+(.*)$"
+		--	local groups = { "file", "lnum", "col", "severity", "message" }
+
+		--	local severity_map = {
+		--		["Error"] = vim.diagnostic.severity.ERROR,
+		--		["Warning"] = vim.diagnostic.severity.WARN,
+		--	}
+		--	local defaults = { ["source"] = "gfortran" }
+
+		--	local required_args = { "-fsyntax-only", "-fdiagnostics-plain-output" }
+		--	local args = vim.list_extend(required_args, gfortran_diagnostic_args)
+
+		--	lint.linters.gfortran = {
+		--		cmd = "gfortran",
+		--		stdin = false,
+		--		append_fname = true,
+		--		stream = "stderr",
+		--		env = nil,
+		--		args = args,
+		--		ignore_exitcode = true,
+		--		parser = require("lint.parser").from_pattern(pattern, groups, severity_map, defaults),
+		--	}
+		--end,
+	}
 })
+
 --------------------------------------------------------------------------------
 
-vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
-	callback = function()
-		local lint_status, lint = pcall(require, "lint")
-		if lint_status then
-			lint.try_lint()
-		end
-	end
-})
+local pattern = "^([^:]+):(%d+):(%d+):%s+([^:]+):%s+(.*)$"
+local groups = { "file", "lnum", "col", "severity", "message" }
+local severity_map = {
+	["Error"] = vim.diagnostic.severity.ERROR,
+	["Warning"] = vim.diagnostic.severity.WARN,
+}
+local defaults = { ["source"] = "gfortran" }
 
---------------------------------------------------------------------------------
+require('lint').linters.fortran = {
+  cmd = 'gfortran',
+  stdin = false,
+  append_fname = true,
+  args = {
+
+	-- Requirede arguments
+	"-fsyntax-only",
+	"-fdiagnostics-plain-output",
+
+	-- Other arguments
+
+    -- Add your module location after `-I`, otherwise linting
+    -- will stop after the first unfound `use`
+    "-I./build/include/",
+    "-J./build/",  -- put generated module files in build dir
+    "-Wall",
+    "-Wextra",
+    "-Wno-tabs",
+    "-cpp",
+    "-fmax-errors=5",
+  },
+  stream = "stderr",
+  ignore_exitcode = true,
+  env = nil,
+  --parser = your_parse_function
+  parser = require("lint.parser").from_pattern(pattern, groups, severity_map, defaults)
+}
 
 ---- Builtin colorschemes, no packer required
 --vim.cmd.colorscheme("default")
@@ -365,8 +353,38 @@ require("lspconfig").pyright.setup {}
 
 --********
 
+--vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+--  callback = function()
+--    -- try_lint without arguments runs the linters defined in `linters_by_ft`
+--    -- for the current filetype
+--    require("lint").try_lint()
+--  end,
+--})
+
+require('lint').linters_by_ft = {
+  markdown = {'vale'},
+  fortran = {'fortran'},
+}
+
 -- fortran linting
-vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
+--vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
+vim.api.nvim_create_autocmd("BufEnter", {
+	callback = function()
+		local lint_status, lint = pcall(require, "lint")
+		if lint_status then
+			lint.try_lint()
+		end
+	end
+})
+vim.api.nvim_create_autocmd("BufWritePost", {
+	callback = function()
+		local lint_status, lint = pcall(require, "lint")
+		if lint_status then
+			lint.try_lint()
+		end
+	end
+})
+vim.api.nvim_create_autocmd("InsertLeave", {
 	callback = function()
 		local lint_status, lint = pcall(require, "lint")
 		if lint_status then
@@ -376,6 +394,11 @@ vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
 })
 
 --------------------------------------------------------------------------------
+
+vim.diagnostic.enable = true
+vim.diagnostic.config({
+  virtual_lines = true,
+})
 
 vim.cmd("hi! Normal ctermbg=NONE guibg=NONE")
 
