@@ -41,19 +41,17 @@ vim.pack.add({
 --
 --     https://fortran-lang.discourse.group/t/linter-for-nvim/8088/13?u=jeff.irwin
 --
--- TODO: can these be placed in a fn to limit scope of "local" vars?
-local pattern = "^([^:]+):(%d+):(%d+):%s+([^:]+):%s+(.*)$"
-local groups = { "file", "lnum", "col", "severity", "message" }
-local severity_map = {
+local f90_pattern = "^([^:]+):(%d+):(%d+):%s+([^:]+):%s+(.*)$"
+local f90_groups = { "file", "lnum", "col", "severity", "message" }
+local f90_defaults = { ["source"] = "gfortran" }
+local f90_severity_map = {
 	["Error"] = vim.diagnostic.severity.ERROR,
 	["Warning"] = vim.diagnostic.severity.WARN,
 }
-local defaults = { ["source"] = "gfortran" }
 
---local function fortran_linter()
---
---	require("lint.parser").from_pattern(pattern, groups, severity_map, defaults)
---end
+local fortran_linter = require("lint.parser").from_pattern(
+	f90_pattern, f90_groups, f90_severity_map, f90_defaults
+)
 
 require('lint').linters.ShadowRimFortranLinter = {
 	cmd = 'gfortran',
@@ -80,8 +78,7 @@ require('lint').linters.ShadowRimFortranLinter = {
 	stream = "stderr",
 	ignore_exitcode = true,
 	env = nil,
-	--parser = fortran_linter
-	parser = require("lint.parser").from_pattern(pattern, groups, severity_map, defaults)
+	parser = fortran_linter
 }
 
 require('lint').linters_by_ft = {
