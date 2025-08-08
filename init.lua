@@ -41,6 +41,7 @@ vim.pack.add({
 --
 --     https://fortran-lang.discourse.group/t/linter-for-nvim/8088/13?u=jeff.irwin
 --
+-- TODO: can these be placed in a fn to limit scope of "local" vars?
 local pattern = "^([^:]+):(%d+):(%d+):%s+([^:]+):%s+(.*)$"
 local groups = { "file", "lnum", "col", "severity", "message" }
 local severity_map = {
@@ -48,6 +49,11 @@ local severity_map = {
 	["Warning"] = vim.diagnostic.severity.WARN,
 }
 local defaults = { ["source"] = "gfortran" }
+
+--local function fortran_linter()
+--
+--	require("lint.parser").from_pattern(pattern, groups, severity_map, defaults)
+--end
 
 require('lint').linters.ShadowRimFortranLinter = {
 	cmd = 'gfortran',
@@ -74,6 +80,7 @@ require('lint').linters.ShadowRimFortranLinter = {
 	stream = "stderr",
 	ignore_exitcode = true,
 	env = nil,
+	--parser = fortran_linter
 	parser = require("lint.parser").from_pattern(pattern, groups, severity_map, defaults)
 }
 
@@ -305,34 +312,15 @@ require("lspconfig").pyright.setup {}
 --********
 
 -- fortran linting
---
--- TODO: DRY
---
---vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
-vim.api.nvim_create_autocmd("BufEnter", {
-	callback = function()
+local function lint_runner()
 		local lint_status, lint = pcall(require, "lint")
 		if lint_status then
 			lint.try_lint()
 		end
-	end
-})
-vim.api.nvim_create_autocmd("BufWritePost", {
-	callback = function()
-		local lint_status, lint = pcall(require, "lint")
-		if lint_status then
-			lint.try_lint()
-		end
-	end
-})
-vim.api.nvim_create_autocmd("InsertLeave", {
-	callback = function()
-		local lint_status, lint = pcall(require, "lint")
-		if lint_status then
-			lint.try_lint()
-		end
-	end
-})
+end
+vim.api.nvim_create_autocmd("BufEnter"    , {callback = lint_runner})
+vim.api.nvim_create_autocmd("BufWritePost", {callback = lint_runner})
+vim.api.nvim_create_autocmd("InsertLeave" , {callback = lint_runner})
 
 --------------------------------------------------------------------------------
 
