@@ -58,7 +58,6 @@ require('lint').linters.ShadowRimFortranLinter = {
 	stdin = false,
 	append_fname = true,
 	args = {
-
 		-- Required arguments
 		"-fsyntax-only",
 		"-fdiagnostics-plain-output",
@@ -310,10 +309,10 @@ require("lspconfig").pyright.setup {}
 
 -- fortran linting
 local function lint_runner()
-		local lint_status, lint = pcall(require, "lint")
-		if lint_status then
-			lint.try_lint()
-		end
+	local lint_status, lint = pcall(require, "lint")
+	if lint_status then
+		lint.try_lint()
+	end
 end
 vim.api.nvim_create_autocmd("BufEnter"    , {callback = lint_runner})
 vim.api.nvim_create_autocmd("BufWritePost", {callback = lint_runner})
