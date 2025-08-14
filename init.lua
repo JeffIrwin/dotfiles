@@ -108,6 +108,9 @@ vim.cmd.colorscheme("tokyonight-moon")
 vim.opt.number         = true
 vim.opt.relativenumber = true
 
+-- Show a rounded box around the "hover" lsp popup (mapped to 'K' below)
+vim.opt.winborder = "rounded"
+
 -- Remap split-window navigation commands, e.g. Ctrl+j instead of the standard
 -- Ctrl+w Ctrl+j
 --
