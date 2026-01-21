@@ -30,10 +30,8 @@ RUN pip install pyright --break-system-packages  # install python lvp
 RUN fortls --version
 
 # Install lua lsp
-#
-# TODO: try updating. Seems like there's a bad memory leak
-RUN curl -LO https://github.com/LuaLS/lua-language-server/releases/download/3.13.9/lua-language-server-3.13.9-linux-x64.tar.gz
-RUN tar xvf lua-language-server-3.13.9-linux-x64.tar.gz
+RUN curl -LO https://github.com/LuaLS/lua-language-server/releases/download/3.17.1/lua-language-server-3.17.1-linux-x64.tar.gz
+RUN tar xvf lua-language-server-*-linux-x64.tar.gz
 RUN ln -s $PWD/bin/lua-language-server /usr/local/bin/lua-language-server
 RUN lua-language-server --version
 
