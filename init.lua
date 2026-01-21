@@ -66,15 +66,20 @@ require('lint').linters.ShadowRimFortranLinter = {
 
 		-- Add your module location after `-I`, otherwise linting
 		-- will stop after the first unfound `use`
-		"-I./target/vc17/Win64/libCubesMod/Release/",
+		"-I../../src/build/Debug", -- for aoc-fortran
+		"-I./build/",
 		"-I./build/include/",
+		"-I./target/vc17/Win64/libCubesMod/Release/",
 		"-J./build/", -- put generated module files in build dir
 		"-Wall",
+		"-Werror=implicit-interface",
 		"-Wextra",
-		"-Wno-tabs",
 		"-Wno-compare-reals", -- not the most useless warning, but frequently noisy when I know what I'm doing
+		"-Wno-tabs",
 		"-cpp",
 		"-fmax-errors=5",
+		--"-I./build/debug/",
+		--"-I./build/release/",
 	},
 	stream = "stderr",
 	ignore_exitcode = true,
@@ -271,47 +276,40 @@ vim.opt.wildignore:append { "*/scratch/*", "*/target/*", "*/build/*" }
 
 --********
 --lua
-
-require("lspconfig").lua_ls.setup {
-	on_init = function(client)
-		if client.workspace_folders then
-			local path = client.workspace_folders[1].name
-
-			if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc')) then
-				return
-			end
-		end
-
-		client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+vim.lsp.config["lua_ls"] = {
+	settings = {
+		Lua = {
 			runtime = {
-				-- Tell the language server which version of Lua you're using
-				-- (most likely LuaJIT in the case of Neovim)
-				version = 'LuaJIT'
+				version = "LuaJIT",
+				path = vim.split(package.path, ";"),
 			},
-			-- Make the server aware of Neovim runtime files
+			diagnostics = {
+				globals = { "vim" },
+			},
 			workspace = {
-				checkThirdParty = false,
 				library = {
 					vim.env.VIMRUNTIME,
-					--vim.env.VIMRUNTIME + "/lua",
-					-- Depending on the usage, you might want to add additional paths here.
-					--"${3rd}/luv/library",
-					-- "${3rd}/busted/library",
-				}
-				-- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
-				-- library = vim.api.nvim_get_runtime_file("", true)
-			}
-		})
-	end,
-	settings = {
-		Lua = {}
-	}
+					"${3rd}/luv/library",
+				},
+				checkThirdParty = false,
+			},
+			completion = {
+				callSnippet = "Replace",
+			},
+			telemetry = {
+				enable = false,
+			},
+		},
+	},
 }
+vim.lsp.enable("lua_ls")
 
 --********
 -- fortran
 
-require("lspconfig").fortls.setup {
+--require("lspconfig").fortls.setup {
+--vim.lsp.config.fortls = {
+vim.lsp.config["fortls"] = {
 	cmd = {
 		'fortls',
 		'--lowercase_intrinsics',
@@ -320,10 +318,37 @@ require("lspconfig").fortls.setup {
 		'--use_signature_help'
 	}
 }
+vim.lsp.enable("fortls")
 
 --********
 -- python
-require("lspconfig").pyright.setup {}
+--require("lspconfig").pyright.setup {}
+vim.lsp.config["pyright"] = {
+}
+vim.lsp.enable("pyright")
+
+--********
+-- LaTeX
+vim.lsp.config["texlab"] = {
+	settings = {
+		texlab = {
+			build = {
+				executable = "latexmk",
+				args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+				onSave = true,
+			},
+			--forwardSearch = {
+			--	executable = "zathura", -- or skim, sioyek, okular
+			--	args = { "--synctex-forward", "%l:1:%f", "%p" },
+			--},
+			chktex = {
+				onOpenAndSave = true,
+				onEdit = false,
+			},
+		},
+	},
+}
+vim.lsp.enable("texlab")
 
 --********
 -- LaTeX

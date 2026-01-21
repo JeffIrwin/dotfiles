@@ -123,6 +123,7 @@ fi
 ulimit -s unlimited
 
 PATH=$PATH:~/.local/bin
+PATH=$PATH:~/.cargo/bin
 PATH=$PATH:/home/linuxbrew/.linuxbrew/bin/
 PATH=$PATH:/snap/bin/
 PATH=$PATH:/opt/nvim-linux-x86_64/bin/
