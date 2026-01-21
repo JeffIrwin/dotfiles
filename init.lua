@@ -67,16 +67,16 @@ require('lint').linters.ShadowRimFortranLinter = {
 		-- Add your module location after `-I`, otherwise linting
 		-- will stop after the first unfound `use`
 		"-I./build/include/",
-		"-I./build/",
 		"-I../../src/build/Debug",  -- for aoc-fortran
-		--"-I./build/debug/",
-		--"-I./build/release/",
+		"-I./build/",
 		"-J./build/",  -- put generated module files in build dir
 		"-Wall",
-		"-Wextra",
-		"-Wno-tabs",
 		"-Werror=implicit-interface",
+		"-Wextra",
 		"-Wno-compare-reals",  -- not the most useless warning, but frequently noisy when I know what I'm doing
+		"-Wno-tabs",
+		--"-I./build/debug/",
+		--"-I./build/release/",
 		"-cpp",
 		"-fmax-errors=5",
 	},
@@ -88,7 +88,7 @@ require('lint').linters.ShadowRimFortranLinter = {
 
 require('lint').linters_by_ft = {
 	--markdown = {'vale'},
-	fortran = {'ShadowRimFortranLinter'},
+	fortran = { 'ShadowRimFortranLinter' },
 }
 
 ---- Builtin colorschemes, no packages required
@@ -115,7 +115,7 @@ vim.opt.number         = true
 vim.opt.relativenumber = true
 
 -- Show a rounded box around the "hover" lsp popup (mapped to 'K' below)
-vim.opt.winborder = "rounded"
+vim.opt.winborder      = "rounded"
 
 -- Case-insensitive file edit completion, e.g. `:e make<TAB>` can complete to Makefile
 vim.opt.wildignorecase = true
@@ -193,10 +193,10 @@ vim.keymap.set("n", "<leader>v", ":Vex!<CR>", { noremap = true })
 -- Hide lint.  It will un-hide next time you write the buffer
 --
 -- Source:  https://github.com/mfussenegger/nvim-lint/issues/411#issuecomment-2360613936
-vim.keymap.set("n", "<leader>h", function ()
+vim.keymap.set("n", "<leader>h", function()
 	--vim.diagnostic.enable = not vim.diagnostic.is_enabled()
 	--if vim.diagnostic.is_enabled() then
-		vim.diagnostic.reset()
+	vim.diagnostic.reset()
 	--else
 	--	vim.diagnostic.enable()
 	--end
@@ -275,47 +275,40 @@ vim.opt.wildignore:append { "*/scratch/*", "*/target/*", "*/build/*" }
 
 --********
 --lua
-
-require("lspconfig").lua_ls.setup {
-	on_init = function(client)
-		if client.workspace_folders then
-			local path = client.workspace_folders[1].name
-
-			if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc')) then
-				return
-			end
-		end
-
-		client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+vim.lsp.config["lua_ls"] = {
+	settings = {
+		Lua = {
 			runtime = {
-				-- Tell the language server which version of Lua you're using
-				-- (most likely LuaJIT in the case of Neovim)
-				version = 'LuaJIT'
+				version = "LuaJIT",
+				path = vim.split(package.path, ";"),
 			},
-			-- Make the server aware of Neovim runtime files
+			diagnostics = {
+				globals = { "vim" },
+			},
 			workspace = {
-				checkThirdParty = false,
 				library = {
 					vim.env.VIMRUNTIME,
-					--vim.env.VIMRUNTIME + "/lua",
-					-- Depending on the usage, you might want to add additional paths here.
-					--"${3rd}/luv/library",
-					-- "${3rd}/busted/library",
-				}
-				-- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
-				-- library = vim.api.nvim_get_runtime_file("", true)
-			}
-		})
-	end,
-	settings = {
-		Lua = {}
-	}
+					"${3rd}/luv/library",
+				},
+				checkThirdParty = false,
+			},
+			completion = {
+				callSnippet = "Replace",
+			},
+			telemetry = {
+				enable = false,
+			},
+		},
+	},
 }
+vim.lsp.enable("lua_ls")
 
 --********
 -- fortran
 
-require("lspconfig").fortls.setup {
+--require("lspconfig").fortls.setup {
+--vim.lsp.config.fortls = {
+vim.lsp.config["fortls"] = {
 	cmd = {
 		'fortls',
 		'--lowercase_intrinsics',
@@ -324,10 +317,14 @@ require("lspconfig").fortls.setup {
 		'--use_signature_help'
 	}
 }
+vim.lsp.enable("fortls")
 
 --********
 -- python
-require("lspconfig").pyright.setup {}
+--require("lspconfig").pyright.setup {}
+vim.lsp.config["pyright"] = {
+}
+vim.lsp.enable("pyright")
 
 --********
 
@@ -338,9 +335,9 @@ local function lint_runner()
 		lint.try_lint()
 	end
 end
-vim.api.nvim_create_autocmd("BufEnter"    , {callback = lint_runner})
-vim.api.nvim_create_autocmd("BufWritePost", {callback = lint_runner})
-vim.api.nvim_create_autocmd("InsertLeave" , {callback = lint_runner})
+vim.api.nvim_create_autocmd("BufEnter", { callback = lint_runner })
+vim.api.nvim_create_autocmd("BufWritePost", { callback = lint_runner })
+vim.api.nvim_create_autocmd("InsertLeave", { callback = lint_runner })
 
 --------------------------------------------------------------------------------
 
@@ -350,4 +347,3 @@ vim.diagnostic.config({
 })
 
 vim.cmd("hi! Normal ctermbg=NONE guibg=NONE")
-
