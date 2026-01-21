@@ -67,10 +67,15 @@ require('lint').linters.ShadowRimFortranLinter = {
 		-- Add your module location after `-I`, otherwise linting
 		-- will stop after the first unfound `use`
 		"-I./build/include/",
+		"-I./build/",
+		"-I../../src/build/Debug",  -- for aoc-fortran
+		--"-I./build/debug/",
+		--"-I./build/release/",
 		"-J./build/",  -- put generated module files in build dir
 		"-Wall",
 		"-Wextra",
 		"-Wno-tabs",
+		"-Werror=implicit-interface",
 		"-Wno-compare-reals",  -- not the most useless warning, but frequently noisy when I know what I'm doing
 		"-cpp",
 		"-fmax-errors=5",
