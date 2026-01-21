@@ -66,6 +66,7 @@ require('lint').linters.ShadowRimFortranLinter = {
 
 		-- Add your module location after `-I`, otherwise linting
 		-- will stop after the first unfound `use`
+		"-I./target/vc17/Win64/libCubesMod/Release/",
 		"-I./build/include/",
 		"-J./build/",  -- put generated module files in build dir
 		"-Wall",
