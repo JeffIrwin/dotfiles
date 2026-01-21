@@ -67,6 +67,7 @@ require('lint').linters.ShadowRimFortranLinter = {
 		-- Add your module location after `-I`, otherwise linting
 		-- will stop after the first unfound `use`
 		"-I./build/include/",
+		"-I../../src/build/Debug/",
 		"-J./build/",  -- put generated module files in build dir
 		"-Wall",
 		"-Wextra",
@@ -271,7 +272,9 @@ vim.opt.wildignore:append { "*/scratch/*", "*/target/*", "*/build/*" }
 --********
 --lua
 
-require("lspconfig").lua_ls.setup {
+--require("lspconfig").lua_ls.setup {
+--vim.lsp.config.lua_ls = {
+vim.lsp.config["lua_ls"] = {
 	on_init = function(client)
 		if client.workspace_folders then
 			local path = client.workspace_folders[1].name
@@ -306,11 +309,33 @@ require("lspconfig").lua_ls.setup {
 		Lua = {}
 	}
 }
+--vim.lsp.config['lua_ls'] = {
+--  -- Command and arguments to start the server.
+--  cmd = { 'lua-language-server' },
+--  -- Filetypes to automatically attach to.
+--  filetypes = { 'lua' },
+--  -- Sets the "workspace" to the directory where any of these files is found.
+--  -- Files that share a root directory will reuse the LSP server connection.
+--  -- Nested lists indicate equal priority, see |vim.lsp.Config|.
+--  root_markers = { { '.luarc.json', '.luarc.jsonc' }, '.git' },
+--  -- Specific settings to send to the server. The schema is server-defined.
+--  -- Example: https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json
+--  settings = {
+--    Lua = {
+--      runtime = {
+--        version = 'LuaJIT',
+--      }
+--    }
+--  }
+--}
+vim.lsp.enable("lua_ls")
 
 --********
 -- fortran
 
-require("lspconfig").fortls.setup {
+--require("lspconfig").fortls.setup {
+--vim.lsp.config.fortls = {
+vim.lsp.config["fortls"] = {
 	cmd = {
 		'fortls',
 		'--lowercase_intrinsics',
@@ -319,10 +344,14 @@ require("lspconfig").fortls.setup {
 		'--use_signature_help'
 	}
 }
+vim.lsp.enable("fortls")
 
 --********
 -- python
-require("lspconfig").pyright.setup {}
+--require("lspconfig").pyright.setup {}
+vim.lsp.config["pyright"] = {
+}
+vim.lsp.enable("pyright")
 
 --********
 
