@@ -49,5 +49,6 @@ cp -r ./* ~/.config/nvim/
 cp .bashrc  ~
 cp .inputrc ~
 
-nvim --headless "+Lazy! sync" +qa
+## lazy.nvim is obsolete now with package management built-in to nvim
+#nvim --headless "+Lazy! sync" +qa
 

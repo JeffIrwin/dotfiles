@@ -68,11 +68,11 @@ require('lint').linters.ShadowRimFortranLinter = {
 		-- will stop after the first unfound `use`
 		"-I./target/vc17/Win64/libCubesMod/Release/",
 		"-I./build/include/",
-		"-J./build/",  -- put generated module files in build dir
+		"-J./build/", -- put generated module files in build dir
 		"-Wall",
 		"-Wextra",
 		"-Wno-tabs",
-		"-Wno-compare-reals",  -- not the most useless warning, but frequently noisy when I know what I'm doing
+		"-Wno-compare-reals", -- not the most useless warning, but frequently noisy when I know what I'm doing
 		"-cpp",
 		"-fmax-errors=5",
 	},
@@ -84,7 +84,7 @@ require('lint').linters.ShadowRimFortranLinter = {
 
 require('lint').linters_by_ft = {
 	--markdown = {'vale'},
-	fortran = {'ShadowRimFortranLinter'},
+	fortran = { 'ShadowRimFortranLinter' },
 }
 
 ---- Builtin colorschemes, no packages required
@@ -111,7 +111,7 @@ vim.opt.number         = true
 vim.opt.relativenumber = true
 
 -- Show a rounded box around the "hover" lsp popup (mapped to 'K' below)
-vim.opt.winborder = "rounded"
+vim.opt.winborder      = "rounded"
 
 -- Case-insensitive file edit completion, e.g. `:e make<TAB>` can complete to Makefile
 vim.opt.wildignorecase = true
@@ -189,10 +189,10 @@ vim.keymap.set("n", "<leader>v", ":Vex!<CR>", { noremap = true })
 -- Hide lint.  It will un-hide next time you write the buffer
 --
 -- Source:  https://github.com/mfussenegger/nvim-lint/issues/411#issuecomment-2360613936
-vim.keymap.set("n", "<leader>h", function ()
+vim.keymap.set("n", "<leader>h", function()
 	--vim.diagnostic.enable = not vim.diagnostic.is_enabled()
 	--if vim.diagnostic.is_enabled() then
-		vim.diagnostic.reset()
+	vim.diagnostic.reset()
 	--else
 	--	vim.diagnostic.enable()
 	--end
@@ -326,6 +326,32 @@ require("lspconfig").fortls.setup {
 require("lspconfig").pyright.setup {}
 
 --********
+-- LaTeX
+--
+--     cargo install texlab --locked
+
+--require('lspconfig').texlab.setup{}
+require('lspconfig').texlab.setup {
+	settings = {
+		texlab = {
+			build = {
+				executable = "latexmk",
+				args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+				onSave = true,
+			},
+			--forwardSearch = {
+			--	executable = "zathura", -- or skim, sioyek, okular
+			--	args = { "--synctex-forward", "%l:1:%f", "%p" },
+			--},
+			chktex = {
+				onOpenAndSave = true,
+				onEdit = false,
+			},
+		},
+	},
+}
+
+--********
 
 -- fortran linting
 local function lint_runner()
@@ -334,9 +360,9 @@ local function lint_runner()
 		lint.try_lint()
 	end
 end
-vim.api.nvim_create_autocmd("BufEnter"    , {callback = lint_runner})
-vim.api.nvim_create_autocmd("BufWritePost", {callback = lint_runner})
-vim.api.nvim_create_autocmd("InsertLeave" , {callback = lint_runner})
+vim.api.nvim_create_autocmd("BufEnter", { callback = lint_runner })
+vim.api.nvim_create_autocmd("BufWritePost", { callback = lint_runner })
+vim.api.nvim_create_autocmd("InsertLeave", { callback = lint_runner })
 
 --------------------------------------------------------------------------------
 
@@ -346,4 +372,3 @@ vim.diagnostic.config({
 })
 
 vim.cmd("hi! Normal ctermbg=NONE guibg=NONE")
-

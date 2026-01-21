@@ -3,13 +3,14 @@ FROM ubuntu:24.04
 
 WORKDIR /workdir
 
-# TODO: there's a good reason to do all apt-get as one line
-RUN apt-get update -y
-RUN apt-get install -y curl
-RUN apt-get install -y git
-RUN apt-get install -y pip
-RUN apt-get install -y tmux
-RUN apt-get install -y gfortran
+RUN apt-get update -y && apt-get install -y \
+	curl \
+	git \
+	pip \
+	tmux \
+	gfortran \
+	cargo
+
 #RUN apt-get install -y npm
 
 # Install nvim
@@ -35,6 +36,10 @@ RUN tar xvf lua-language-server-3.13.9-linux-x64.tar.gz
 RUN ln -s $PWD/bin/lua-language-server /usr/local/bin/lua-language-server
 RUN lua-language-server --version
 
+# LaTeX lsp
+RUN cargo install texlab --locked
+
 COPY . .
+RUN chmod +x ./install.sh
 RUN ./install.sh
 
