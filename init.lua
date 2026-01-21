@@ -66,19 +66,19 @@ require('lint').linters.ShadowRimFortranLinter = {
 
 		-- Add your module location after `-I`, otherwise linting
 		-- will stop after the first unfound `use`
-		"-I./build/include/",
-		"-I../../src/build/Debug",  -- for aoc-fortran
+		"-I../../src/build/Debug", -- for aoc-fortran
 		"-I./build/",
-		"-J./build/",  -- put generated module files in build dir
+		"-I./build/include/",
+		"-J./build/", -- put generated module files in build dir
 		"-Wall",
 		"-Werror=implicit-interface",
 		"-Wextra",
-		"-Wno-compare-reals",  -- not the most useless warning, but frequently noisy when I know what I'm doing
+		"-Wno-compare-reals", -- not the most useless warning, but frequently noisy when I know what I'm doing
 		"-Wno-tabs",
-		--"-I./build/debug/",
-		--"-I./build/release/",
 		"-cpp",
 		"-fmax-errors=5",
+		--"-I./build/debug/",
+		--"-I./build/release/",
 	},
 	stream = "stderr",
 	ignore_exitcode = true,
@@ -325,6 +325,29 @@ vim.lsp.enable("fortls")
 vim.lsp.config["pyright"] = {
 }
 vim.lsp.enable("pyright")
+
+--********
+-- LaTeX
+vim.lsp.config["texlab"] = {
+	settings = {
+		texlab = {
+			build = {
+				executable = "latexmk",
+				args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+				onSave = true,
+			},
+			--forwardSearch = {
+			--	executable = "zathura", -- or skim, sioyek, okular
+			--	args = { "--synctex-forward", "%l:1:%f", "%p" },
+			--},
+			chktex = {
+				onOpenAndSave = true,
+				onEdit = false,
+			},
+		},
+	},
+}
+vim.lsp.enable("texlab")
 
 --********
 

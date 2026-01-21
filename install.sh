@@ -49,5 +49,5 @@ cp -r ./* ~/.config/nvim/
 cp .bashrc  ~
 cp .inputrc ~
 
-nvim --headless "+Lazy! sync" +qa
+nvim --headless +qa
 
