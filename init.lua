@@ -72,6 +72,7 @@ require('lint').linters.ShadowRimFortranLinter = {
 		"-Wall",
 		"-Wextra",
 		"-Wno-tabs",
+		"-Wno-compare-reals",  -- not the most useless warning, but frequently noisy when I know what I'm doing
 		"-cpp",
 		"-fmax-errors=5",
 	},
@@ -111,6 +112,9 @@ vim.opt.relativenumber = true
 
 -- Show a rounded box around the "hover" lsp popup (mapped to 'K' below)
 vim.opt.winborder = "rounded"
+
+-- Case-insensitive file edit completion, e.g. `:e make<TAB>` can complete to Makefile
+vim.opt.wildignorecase = true
 
 -- Remap split-window navigation commands, e.g. Ctrl+j instead of the standard
 -- Ctrl+w Ctrl+j
@@ -181,6 +185,18 @@ vim.keymap.set("n", "<leader>p", ":bprev<CR>", { noremap = true })
 vim.keymap.set("n", "<leader>e", ":Ex<CR>", { noremap = true })
 vim.keymap.set("n", "<leader>s", ":Sex<CR>", { noremap = true })
 vim.keymap.set("n", "<leader>v", ":Vex!<CR>", { noremap = true })
+
+-- Hide lint.  It will un-hide next time you write the buffer
+--
+-- Source:  https://github.com/mfussenegger/nvim-lint/issues/411#issuecomment-2360613936
+vim.keymap.set("n", "<leader>h", function ()
+	--vim.diagnostic.enable = not vim.diagnostic.is_enabled()
+	--if vim.diagnostic.is_enabled() then
+		vim.diagnostic.reset()
+	--else
+	--	vim.diagnostic.enable()
+	--end
+end, { desc = "hide lint" })
 
 -- Create the lsp keymaps only when a language server is active
 vim.api.nvim_create_autocmd('LspAttach', {
