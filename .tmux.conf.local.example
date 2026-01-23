@@ -31,6 +31,6 @@ select-pane   -t 0
 
 #===============================================================================
 
-# theme override
-set -g status-bg "#dd66aa"
+## theme override
+#set -g status-bg "#dd66aa"
 
