@@ -1,22 +1,22 @@
 
-#===========================================================
-
-export TIMEFMT=$'real\t%E\nuser\t%U\nsys\t%S'
-
-#****************
-
 PATH="$HOME/Library/Python/3.9/bin:$PATH"
 PATH=~/.local/bin/:$PATH
 export PATH
 
 #===========================================================
 
+# Show "time" shell command output on newlines rather than user/sys/etc crammed
+# into a single line
+export TIMEFMT=$'real\t%E\nuser\t%U\nsys\t%S'
+
+#****************
+
 # Ctrl+u delete's the whole line on mac by default. Make it only delete from
 # start to cursor like sane operating systems
 bindkey ^U backward-kill-line
 
 #===========================================================
-#
+
 # Prompt colors for user, host, and pwd
 PROMPT='%F{green}%n@%m%f %F{blue}%1~%f %# '
 autoload -U colors && colors
