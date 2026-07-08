@@ -29,7 +29,7 @@ export CLICOLOR=1
 ## No alias needed since isocline in syntran 1.4.0
 #alias syntran="rlwrap syntran"
 
-alias sy="rlwrap syntran"
+alias sy="syntran"
 
 alias vim=nvim
 alias vi=nvim
