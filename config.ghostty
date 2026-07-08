@@ -1,0 +1,26 @@
+
+# This is not toml -- it's a custom ghostty format
+#
+# Save in ~/.config/ghostty/config.ghostty
+#
+# Re-source with Cmd+Shift+, (command-shift-comma)
+
+#****************
+
+##background = 282c34
+background = 141618
+##background = 111111
+#
+#foreground = ffffff
+
+#theme = Catppuccin Frappe
+#theme = TokyoNight Night
+#theme = Builtin Dark
+#theme = iTerm2 Default
+theme = GitHub Dark High Contrast
+
+#****************
+
+# Can't use tmux in an ssh session to linux without this:
+term = xterm-256color
+
